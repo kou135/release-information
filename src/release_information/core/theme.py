@@ -28,6 +28,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from .themes import catppuccin_mocha as _catppuccin_mocha
 from .themes import dracula as _dracula
 from .themes import github_light as _github_light
 from .themes import gruvbox_dark as _gruvbox_dark
@@ -148,6 +149,15 @@ THEMES: dict[str, Theme] = {
         pygments_style=_gruvbox_dark.PYGMENTS_STYLE,
         is_dark=_gruvbox_dark.IS_DARK,
         source_url=_gruvbox_dark.SOURCE_URL,
+    ),
+    "catppuccin-mocha": Theme(
+        name="catppuccin-mocha",
+        display_name=_catppuccin_mocha.DISPLAY_NAME,
+        description=_catppuccin_mocha.DESCRIPTION,
+        base_css=_catppuccin_mocha.BASE_CSS,
+        pygments_style=_catppuccin_mocha.PYGMENTS_STYLE,
+        is_dark=_catppuccin_mocha.IS_DARK,
+        source_url=_catppuccin_mocha.SOURCE_URL,
     ),
 }
 
