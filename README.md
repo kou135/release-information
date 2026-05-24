@@ -1,7 +1,7 @@
 # release-information
 
 [![CI](https://github.com/kou135/release-information/actions/workflows/ci.yml/badge.svg)](https://github.com/kou135/release-information/actions/workflows/ci.yml)
-[![PyPI](https://img.shields.io/badge/PyPI-TBA-lightgrey)](https://pypi.org/project/release-information/)
+[![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 
 A git pre-commit driven Markdown to single-file HTML renderer for release notes and design
@@ -39,20 +39,20 @@ on every commit, without thinking about it again.
 
 ## Install
 
-`pipx` is recommended so the CLI is available globally without polluting any project's venv.
+Currently installed straight from GitHub. `pipx` is recommended so the CLI is available
+globally without polluting any project's venv.
 
 ```bash
-pipx install release-information     # or: pip install release-information
+pipx install git+https://github.com/kou135/release-information.git
+# or: pip install git+https://github.com/kou135/release-information.git
 ```
-
-> **Status**: PyPI release is TBA. Until then, install from source:
-> ```bash
-> pipx install git+https://github.com/kou135/release-information.git
-> # or: pip install git+https://github.com/kou135/release-information.git
-> ```
 
 `release-information` requires Python 3.10+. macOS and Linux are supported; Windows is on
 the roadmap (the bundled pre-commit hook is a POSIX shell script).
+
+> **PyPI**: a publish workflow is wired up (`.github/workflows/publish.yml`) but has not
+> been triggered yet. See [`docs/PUBLISHING.md`](./docs/PUBLISHING.md) if you want to fork
+> and publish your own copy.
 
 ## Quick start
 
@@ -60,7 +60,7 @@ Five-minute path from zero to a rendered HTML release note:
 
 ```bash
 # 1. install the CLI globally
-pipx install release-information
+pipx install git+https://github.com/kou135/release-information.git
 
 # 2. move into the repository where you want HTML release notes
 cd ~/workspace/your-project
