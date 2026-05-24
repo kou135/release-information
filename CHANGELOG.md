@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 _Nothing yet._
 
+## [0.1.1] - 2026-05-24
+
+### Fixed
+
+- pre-commit hook now works correctly under pipx (and any isolated-venv)
+  installs by removing the system-python dep pre-check that referenced
+  packages only present in the CLI's own venv. The hook still verifies the
+  `release-information` CLI is on `PATH` (`command -v` probe), which is the
+  correct boundary: if the CLI is installed, its packaging guarantees its own
+  `markdown` / `pygments` dependencies are present inside its venv.
+
 ## [0.1.0] - 2026-05-24
 
 Initial public release. Carves the `minima` workspace's spec renderer out into a
@@ -60,5 +71,6 @@ reusable, installable OSS package.
   file (`pre-commit`) or restores a single file (`pre-commit.backup`). The
   `.git/` directory is never traversed.
 
-[Unreleased]: https://github.com/kou135/release-information/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/kou135/release-information/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/kou135/release-information/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/kou135/release-information/releases/tag/v0.1.0
