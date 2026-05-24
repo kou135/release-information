@@ -33,6 +33,7 @@ from .themes import github_light as _github_light
 from .themes import midnight_museum as _midnight_museum
 from .themes import nord as _nord
 from .themes import one_dark as _one_dark
+from .themes import solarized_light as _solarized_light
 from .themes import tokyo_night as _tokyo_night
 
 
@@ -128,6 +129,15 @@ THEMES: dict[str, Theme] = {
         pygments_style=_github_light.PYGMENTS_STYLE,
         is_dark=_github_light.IS_DARK,
         source_url=_github_light.SOURCE_URL,
+    ),
+    "solarized-light": Theme(
+        name="solarized-light",
+        display_name=_solarized_light.DISPLAY_NAME,
+        description=_solarized_light.DESCRIPTION,
+        base_css=_solarized_light.BASE_CSS,
+        pygments_style=_solarized_light.PYGMENTS_STYLE,
+        is_dark=_solarized_light.IS_DARK,
+        source_url=_solarized_light.SOURCE_URL,
     ),
 }
 
