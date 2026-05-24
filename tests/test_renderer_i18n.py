@@ -1,10 +1,10 @@
-"""Renderer-side i18n tests (en baseline only — ja/ko/hi land in C1-C3).
+"""Renderer-side i18n tests (en baseline + ja from C1; ko/hi land in C2/C3).
 
-Per plan-i18n.md section 4.2, the en baseline verifies that:
+Per plan-i18n.md section 4.2 / 4.3, this module verifies that:
 
-1. ``<html lang="en">`` is emitted when the resolved locale is English.
-2. The TOC title text in the rendered HTML is the en string ``"Contents"``
-   (the source-of-truth value in ``core.locales.en``).
+1. ``<html lang="...">`` is emitted with the resolved locale code.
+2. The TOC title text in the rendered HTML matches the per-locale string
+   bundle (``"Contents"`` for en, ``"目次"`` for ja, etc.).
 """
 
 from __future__ import annotations
@@ -43,3 +43,10 @@ def test_render_uses_locale_specific_toc_title_en(basic_md: str) -> None:
     # We only assert presence of the literal string, which is what end users
     # see (the aside also surfaces the TOC tree).
     assert "Contents" in html
+
+
+def test_render_emits_html_lang_attribute_ja(basic_md: str) -> None:
+    """Explicit ``locale="ja"`` -> ``<html lang="ja">`` plus the ja TOC title."""
+    html = render_markdown(basic_md, locale="ja")
+    assert '<html lang="ja">' in html
+    assert "目次" in html
