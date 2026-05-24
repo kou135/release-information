@@ -30,7 +30,15 @@ from pathlib import Path
 
 import pytest
 
+import release_information.hooks.install as _hooks_install_mod
 from release_information.hooks.install import install
+
+# Absolute path to the bundled hook template that ``install()`` copies into
+# ``<repo>/.git/hooks/pre-commit``. Resolving it from the install module keeps
+# this test honest if the template ever moves.
+HOOK_TEMPLATE_PATH = (
+    Path(_hooks_install_mod.__file__).parent / "templates" / "pre-commit.sh"
+)
 
 
 def _git_available() -> bool:
@@ -158,4 +166,40 @@ def test_pre_commit_hook_ignores_unrelated_markdown(hooked_repo: Path) -> None:
     }
     assert committed_paths == {"README.md"}, (
         f"unexpected files in HEAD commit: {committed_paths}"
+    )
+
+
+def test_pre_commit_hook_template_has_no_system_python_dep_check() -> None:
+    """Static guard against the T6-discovered isolated-venv regression.
+
+    The bundled hook template runs in the *system* shell, so any
+    ``python3 -c "import markdown, pygments"`` style probe would resolve
+    against the user's system ``python3`` — but those packages live in the
+    CLI's own (often pipx-managed) venv, not in the system interpreter.
+    The previous version of the hook did exactly that and consequently
+    failed every commit under a pipx install.
+
+    We pin the contract at the template level: the file must not contain
+    any ``import markdown`` / ``import pygments`` string. The hook is
+    allowed to *invoke* the ``release-information`` CLI (which brings its
+    own deps); it must not second-guess them through the host interpreter.
+
+    Bypassing this guard requires a deliberate, reviewed change to both
+    the hook and this test, which is the point.
+    """
+    assert HOOK_TEMPLATE_PATH.is_file(), (
+        f"hook template not found at {HOOK_TEMPLATE_PATH}"
+    )
+    template_src = HOOK_TEMPLATE_PATH.read_text(encoding="utf-8")
+
+    forbidden_fragments = (
+        "import markdown",
+        "import pygments",
+    )
+    offending = [frag for frag in forbidden_fragments if frag in template_src]
+    assert not offending, (
+        "pre-commit.sh must not probe deps through the system python3"
+        f" (found forbidden fragments: {offending}). See T6 handoff:"
+        " those packages only exist in the CLI's own venv under pipx"
+        " installs, so a host-level import check always false-positives."
     )
