@@ -28,6 +28,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from .themes import dracula as _dracula
 from .themes import midnight_museum as _midnight_museum
 from .themes import nord as _nord
 from .themes import tokyo_night as _tokyo_night
@@ -98,6 +99,15 @@ THEMES: dict[str, Theme] = {
         pygments_style=_tokyo_night.PYGMENTS_STYLE,
         is_dark=_tokyo_night.IS_DARK,
         source_url=_tokyo_night.SOURCE_URL,
+    ),
+    "dracula": Theme(
+        name="dracula",
+        display_name=_dracula.DISPLAY_NAME,
+        description=_dracula.DESCRIPTION,
+        base_css=_dracula.BASE_CSS,
+        pygments_style=_dracula.PYGMENTS_STYLE,
+        is_dark=_dracula.IS_DARK,
+        source_url=_dracula.SOURCE_URL,
     ),
 }
 
