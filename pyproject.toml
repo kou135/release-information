@@ -35,6 +35,9 @@ dev = [
     "ruff>=0.4",
 ]
 
+[project.scripts]
+release-information = "release_information.cli:main"
+
 [project.urls]
 Homepage = "https://github.com/kou135/release-information"
 Issues = "https://github.com/kou135/release-information/issues"
