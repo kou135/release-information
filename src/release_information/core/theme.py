@@ -29,6 +29,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from .themes import dracula as _dracula
+from .themes import github_light as _github_light
 from .themes import midnight_museum as _midnight_museum
 from .themes import nord as _nord
 from .themes import one_dark as _one_dark
@@ -118,6 +119,15 @@ THEMES: dict[str, Theme] = {
         pygments_style=_one_dark.PYGMENTS_STYLE,
         is_dark=_one_dark.IS_DARK,
         source_url=_one_dark.SOURCE_URL,
+    ),
+    "github-light": Theme(
+        name="github-light",
+        display_name=_github_light.DISPLAY_NAME,
+        description=_github_light.DESCRIPTION,
+        base_css=_github_light.BASE_CSS,
+        pygments_style=_github_light.PYGMENTS_STYLE,
+        is_dark=_github_light.IS_DARK,
+        source_url=_github_light.SOURCE_URL,
     ),
 }
 
