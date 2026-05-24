@@ -1,0 +1,161 @@
+"""End-to-end regression test for the bundled ``pre-commit`` hook.
+
+T5 background
+-------------
+
+T3 shipped a pre-commit hook that re-renders every staged
+``docs/release-information/**/*.md`` to a single-file HTML and ``git add``s
+the result, so a single ``git commit -m "..."`` produces the matching HTML
+in the same commit (dogfooding).
+
+In T4 we discovered the hook was a silent no-op: git's default pathspec does
+not glob-expand ``**``, so the hook's ``git diff --cached --name-only --
+'docs/release-information/**/*.md'`` always returned an empty list and the
+script exited 0 without rendering anything.
+
+The existing ``test_hook_install.py`` only covered the install/uninstall
+metadata flow (where the file lands, chmod bits, backup/restore). It never
+actually ran the hook from inside ``git commit``, which is why the glob bug
+slipped through. This module fills that gap: it spins up a real tmp git repo,
+installs the hook, commits a markdown file, and asserts the resulting commit
+contains the rendered HTML next to it.
+"""
+
+from __future__ import annotations
+
+import os
+import shutil
+import subprocess
+from pathlib import Path
+
+import pytest
+
+from release_information.hooks.install import install
+
+
+def _git_available() -> bool:
+    return shutil.which("git") is not None
+
+
+def _cli_available() -> bool:
+    return shutil.which("release-information") is not None
+
+
+pytestmark = pytest.mark.skipif(
+    not (_git_available() and _cli_available()),
+    reason=(
+        "needs both ``git`` and the ``release-information`` CLI on PATH"
+        " (run `pip install -e \".[dev]\"` first)"
+    ),
+)
+
+
+def _run_git(*args: str, cwd: Path) -> subprocess.CompletedProcess[str]:
+    """Run a git command in ``cwd`` with deterministic identity envs."""
+    env = os.environ.copy()
+    # Make commits work in an isolated tmp repo without depending on the
+    # user's global git config (also keeps the test deterministic).
+    env.setdefault("GIT_AUTHOR_NAME", "release-information tests")
+    env.setdefault("GIT_AUTHOR_EMAIL", "tests@release-information.local")
+    env.setdefault("GIT_COMMITTER_NAME", "release-information tests")
+    env.setdefault("GIT_COMMITTER_EMAIL", "tests@release-information.local")
+    return subprocess.run(
+        ["git", *args],
+        cwd=cwd,
+        capture_output=True,
+        text=True,
+        check=False,
+        env=env,
+    )
+
+
+@pytest.fixture
+def hooked_repo(tmp_path: Path) -> Path:
+    """tmp_path with an initialised git repo *and* our pre-commit hook installed."""
+    init = _run_git("init", "--quiet", cwd=tmp_path)
+    assert init.returncode == 0, init.stderr
+    # Initial branch name does not matter for this test; git's default is fine.
+
+    hook_path = install(tmp_path, force=False)
+    assert hook_path.is_file()
+    return tmp_path
+
+
+def test_pre_commit_hook_renders_staged_markdown_into_same_commit(
+    hooked_repo: Path,
+) -> None:
+    """Committing ``docs/release-information/v0.1.0.md`` produces ``v0.1.0.html``.
+
+    Regression guard for the T4-discovered glob bug: before the fix the hook
+    silently exited 0 and ``v0.1.0.html`` was never staged. With the
+    ``:(glob)`` pathspec fix the hook re-renders the markdown and ``git add``s
+    the resulting HTML, so both files appear in the same commit.
+    """
+    docs = hooked_repo / "docs" / "release-information"
+    docs.mkdir(parents=True)
+    md = docs / "v0.1.0.md"
+    md.write_text(
+        "# v0.1.0\n\nInitial release of release-information.\n",
+        encoding="utf-8",
+    )
+
+    add = _run_git("add", str(md.relative_to(hooked_repo)), cwd=hooked_repo)
+    assert add.returncode == 0, add.stderr
+
+    commit = _run_git(
+        "commit", "-m", "docs: add v0.1.0 release notes", cwd=hooked_repo
+    )
+    assert commit.returncode == 0, (
+        f"commit failed.\nstdout:\n{commit.stdout}\nstderr:\n{commit.stderr}"
+    )
+
+    # The hook must have written the rendered HTML next to the markdown.
+    rendered = docs / "v0.1.0.html"
+    assert rendered.is_file(), (
+        "pre-commit hook did not produce the HTML file"
+        f" (regression of the T5 glob bug?). Commit output:\n"
+        f"stdout:\n{commit.stdout}\nstderr:\n{commit.stderr}"
+    )
+
+    # And it must be part of HEAD (the hook ``git add``s it before commit
+    # finalisation, which is the whole point of dogfooding via pre-commit).
+    show = _run_git("show", "--name-only", "--pretty=format:", "HEAD", cwd=hooked_repo)
+    assert show.returncode == 0, show.stderr
+    committed_paths = {
+        line.strip() for line in show.stdout.splitlines() if line.strip()
+    }
+    assert "docs/release-information/v0.1.0.md" in committed_paths
+    assert "docs/release-information/v0.1.0.html" in committed_paths, (
+        "v0.1.0.html was rendered but not included in the same commit;"
+        f" git show output:\n{show.stdout}"
+    )
+
+
+def test_pre_commit_hook_ignores_unrelated_markdown(hooked_repo: Path) -> None:
+    """Markdown outside ``docs/release-information/`` must not be auto-rendered.
+
+    The hook is intentionally scoped to the release-notes directory. This
+    test pins the contract so a future glob change does not silently start
+    rendering ``README.md`` or other top-level markdown.
+    """
+    readme = hooked_repo / "README.md"
+    readme.write_text("# Sample repo\n\nNothing to see here.\n", encoding="utf-8")
+
+    add = _run_git("add", "README.md", cwd=hooked_repo)
+    assert add.returncode == 0, add.stderr
+
+    commit = _run_git("commit", "-m", "chore: add README", cwd=hooked_repo)
+    assert commit.returncode == 0, (
+        f"commit failed.\nstdout:\n{commit.stdout}\nstderr:\n{commit.stderr}"
+    )
+
+    # No README.html should have been generated.
+    assert not (hooked_repo / "README.html").exists()
+
+    show = _run_git("show", "--name-only", "--pretty=format:", "HEAD", cwd=hooked_repo)
+    committed_paths = {
+        line.strip() for line in show.stdout.splitlines() if line.strip()
+    }
+    assert committed_paths == {"README.md"}, (
+        f"unexpected files in HEAD commit: {committed_paths}"
+    )
