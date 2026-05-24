@@ -1,4 +1,4 @@
-"""Renderer-side i18n tests (en baseline + ja from C1; ko/hi land in C2/C3).
+"""Renderer-side i18n tests (en baseline + ja from C1 + ko from C2; hi lands in C3).
 
 Per plan-i18n.md section 4.2 / 4.3, this module verifies that:
 
@@ -50,3 +50,10 @@ def test_render_emits_html_lang_attribute_ja(basic_md: str) -> None:
     html = render_markdown(basic_md, locale="ja")
     assert '<html lang="ja">' in html
     assert "目次" in html
+
+
+def test_render_emits_html_lang_attribute_ko(basic_md: str) -> None:
+    """Explicit ``locale="ko"`` -> ``<html lang="ko">`` plus the ko TOC title."""
+    html = render_markdown(basic_md, locale="ko")
+    assert '<html lang="ko">' in html
+    assert "목차" in html
