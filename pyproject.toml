@@ -53,6 +53,9 @@ ignore = []
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["E501"]
+# theme.py embeds verbatim CSS from minima for visual parity; long font-stack
+# declarations must stay on a single line so we exempt that file from E501.
+"src/release_information/core/theme.py" = ["E501"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
