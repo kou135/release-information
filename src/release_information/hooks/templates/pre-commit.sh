@@ -14,7 +14,13 @@ set -euo pipefail
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 cd "$REPO_ROOT"
 
-staged_md=$(git diff --cached --name-only --diff-filter=ACMR -- 'docs/release-information/**/*.md' || true)
+# NOTE: ``**`` is *not* glob-expanded by git's default pathspec, so writing
+# ``docs/release-information/**/*.md`` matches a literal ``**`` segment that
+# never exists. The ``:(glob)`` pathspec magic prefix opts into shell-style
+# globbing (see ``man gitglossary`` → "pathspec / glob magic"), which lets us
+# capture every staged markdown under ``docs/release-information/``,
+# including nested sub-directories.
+staged_md=$(git diff --cached --name-only --diff-filter=ACMR -- ':(glob)docs/release-information/**/*.md' || true)
 
 if [ -z "$staged_md" ]; then
   exit 0
