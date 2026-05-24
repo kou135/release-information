@@ -33,6 +33,7 @@ from .themes import dracula as _dracula
 from .themes import github_light as _github_light
 from .themes import gruvbox_dark as _gruvbox_dark
 from .themes import midnight_museum as _midnight_museum
+from .themes import monokai_classic as _monokai_classic
 from .themes import nord as _nord
 from .themes import one_dark as _one_dark
 from .themes import solarized_light as _solarized_light
@@ -158,6 +159,15 @@ THEMES: dict[str, Theme] = {
         pygments_style=_catppuccin_mocha.PYGMENTS_STYLE,
         is_dark=_catppuccin_mocha.IS_DARK,
         source_url=_catppuccin_mocha.SOURCE_URL,
+    ),
+    "monokai-classic": Theme(
+        name="monokai-classic",
+        display_name=_monokai_classic.DISPLAY_NAME,
+        description=_monokai_classic.DESCRIPTION,
+        base_css=_monokai_classic.BASE_CSS,
+        pygments_style=_monokai_classic.PYGMENTS_STYLE,
+        is_dark=_monokai_classic.IS_DARK,
+        source_url=_monokai_classic.SOURCE_URL,
     ),
 }
 
