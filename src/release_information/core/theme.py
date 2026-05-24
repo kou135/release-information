@@ -31,6 +31,7 @@ from dataclasses import dataclass
 from .themes import dracula as _dracula
 from .themes import midnight_museum as _midnight_museum
 from .themes import nord as _nord
+from .themes import one_dark as _one_dark
 from .themes import tokyo_night as _tokyo_night
 
 
@@ -108,6 +109,15 @@ THEMES: dict[str, Theme] = {
         pygments_style=_dracula.PYGMENTS_STYLE,
         is_dark=_dracula.IS_DARK,
         source_url=_dracula.SOURCE_URL,
+    ),
+    "one-dark": Theme(
+        name="one-dark",
+        display_name=_one_dark.DISPLAY_NAME,
+        description=_one_dark.DESCRIPTION,
+        base_css=_one_dark.BASE_CSS,
+        pygments_style=_one_dark.PYGMENTS_STYLE,
+        is_dark=_one_dark.IS_DARK,
+        source_url=_one_dark.SOURCE_URL,
     ),
 }
 
