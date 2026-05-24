@@ -30,6 +30,7 @@ from dataclasses import dataclass
 
 from .themes import midnight_museum as _midnight_museum
 from .themes import nord as _nord
+from .themes import tokyo_night as _tokyo_night
 
 
 @dataclass(frozen=True)
@@ -88,6 +89,15 @@ THEMES: dict[str, Theme] = {
         pygments_style=_nord.PYGMENTS_STYLE,
         is_dark=_nord.IS_DARK,
         source_url=_nord.SOURCE_URL,
+    ),
+    "tokyo-night": Theme(
+        name="tokyo-night",
+        display_name=_tokyo_night.DISPLAY_NAME,
+        description=_tokyo_night.DESCRIPTION,
+        base_css=_tokyo_night.BASE_CSS,
+        pygments_style=_tokyo_night.PYGMENTS_STYLE,
+        is_dark=_tokyo_night.IS_DARK,
+        source_url=_tokyo_night.SOURCE_URL,
     ),
 }
 
