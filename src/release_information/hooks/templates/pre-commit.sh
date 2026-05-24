@@ -26,13 +26,15 @@ if [ -z "$staged_md" ]; then
   exit 0
 fi
 
-if ! python3 -c "import markdown, pygments" 2>/dev/null; then
-  echo "[pre-commit] missing python deps for release-information." >&2
-  echo "[pre-commit]   pipx install release-information" >&2
-  echo "[pre-commit] (or: pip install release-information)" >&2
-  exit 1
-fi
-
+# NOTE: We intentionally do *not* probe the host ``python3`` for the
+# renderer's Python deps here. Those deps live inside the
+# ``release-information`` CLI's own environment (e.g. a pipx-managed venv
+# under ``~/.local/pipx/venvs/release-information/``), not in the system
+# interpreter, so a host-level dep check would false-positive on every
+# isolated-venv install. The ``command -v`` probe below is the right
+# boundary: if the CLI is on PATH, we trust its packaging to have brought
+# its own deps. See the static guard in ``tests/test_pre_commit_hook.py``
+# (T6 regression).
 if ! command -v release-information >/dev/null 2>&1; then
   echo "[pre-commit] release-information CLI not found on PATH." >&2
   echo "[pre-commit]   pipx install release-information" >&2
