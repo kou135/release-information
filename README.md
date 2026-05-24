@@ -180,9 +180,13 @@ Issues and PRs are welcome. The project optimises for **stability of the rendere
 output** (the inline CSS is a public contract; changing it forces every downstream repo to
 re-render); behaviour changes require a `CHANGELOG.md` entry under *Changed* or *Breaking*.
 
+## Releasing
+
+Maintainers: see [`docs/PUBLISHING.md`](./docs/PUBLISHING.md) for the PyPI release workflow
+(tag-driven, trusted publishing via OIDC — no API tokens).
+
 ## Roadmap (out of scope for v0.1.0)
 
-- PyPI publish (manual, human-gated)
 - `pre-commit` framework (`.pre-commit-hooks.yaml`) integration alongside the bundled hook
 - Multi-theme switching via CLI flag
 - Front-matter driven release note structure (`version`, `date`, `breaking` keys)
