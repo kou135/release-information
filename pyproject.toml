@@ -63,6 +63,10 @@ ignore = []
 # theme.py embeds verbatim CSS from minima for visual parity; long font-stack
 # declarations must stay on a single line so we exempt that file from E501.
 "src/release_information/core/theme.py" = ["E501"]
+# Each theme module embeds an inline CSS block (long font-stack declarations
+# and palette comments). The plan-design-themes.md C0 task adds this exemption
+# so themes/*.py mirrors the same E501 policy as the parent theme.py.
+"src/release_information/core/themes/*.py" = ["E501"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

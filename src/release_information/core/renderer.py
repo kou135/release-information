@@ -8,7 +8,9 @@ Ported from minima/scripts/render-spec.py. The rendering pipeline is:
    so every document gets a sidebar TOC by default.
 3. Extract the first ``<h1>`` text as the document ``<title>`` (with a caller
    provided fallback).
-4. Build the syntax-highlighting stylesheet via Pygments (monokai).
+4. Resolve the requested theme (``theme_name`` kwarg or default) and build
+   the syntax-highlighting stylesheet via Pygments using
+   ``theme.pygments_style``.
 5. Compose the final HTML by handing everything to
    :func:`release_information.core.theme.build_html`.
 """
@@ -20,7 +22,7 @@ import re
 import markdown
 from pygments.formatters import HtmlFormatter
 
-from .theme import build_html
+from .theme import build_html, get_theme
 
 _MARKDOWN_EXTENSIONS: list[str] = [
     "extra",
@@ -78,7 +80,12 @@ def _extract_title(body_html: str, fallback: str) -> str:
     return inner or fallback
 
 
-def render_markdown(md_text: str, *, title_fallback: str = "") -> str:
+def render_markdown(
+    md_text: str,
+    *,
+    title_fallback: str = "",
+    theme_name: str | None = None,
+) -> str:
     """Render a Markdown string to a single-file HTML document.
 
     Parameters
@@ -87,13 +94,23 @@ def render_markdown(md_text: str, *, title_fallback: str = "") -> str:
         UTF-8 Markdown source.
     title_fallback:
         Used as the ``<title>`` value when no ``<h1>`` is present in ``md_text``.
+    theme_name:
+        Registry key of the theme to render with. ``None`` falls back to
+        :data:`release_information.core.theme.DEFAULT_THEME_NAME` so existing
+        callers that omit this kwarg keep the v0.1.1 Midnight Museum look.
 
     Returns
     -------
     str
         A complete HTML5 document (``<!DOCTYPE html>`` through ``</html>``) with
         inline CSS, Pygments-highlighted code blocks, and an auto-injected TOC.
+
+    Raises
+    ------
+    ValueError
+        If ``theme_name`` is not present in the ``THEMES`` registry.
     """
+    theme = get_theme(theme_name)
     prepared = _inject_toc_marker(md_text)
     md = markdown.Markdown(
         extensions=_MARKDOWN_EXTENSIONS,
@@ -101,6 +118,12 @@ def render_markdown(md_text: str, *, title_fallback: str = "") -> str:
         output_format="html5",
     )
     body = md.convert(prepared)
-    pygments_css = HtmlFormatter(style="monokai").get_style_defs(".codehilite")
+    pygments_css = HtmlFormatter(style=theme.pygments_style).get_style_defs(".codehilite")
     title = _extract_title(body, title_fallback)
-    return build_html(title=title, body=body, toc=md.toc, pygments_css=pygments_css)
+    return build_html(
+        title=title,
+        body=body,
+        toc=md.toc,
+        pygments_css=pygments_css,
+        theme=theme,
+    )
