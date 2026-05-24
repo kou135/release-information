@@ -30,6 +30,7 @@ from dataclasses import dataclass
 
 from .themes import dracula as _dracula
 from .themes import github_light as _github_light
+from .themes import gruvbox_dark as _gruvbox_dark
 from .themes import midnight_museum as _midnight_museum
 from .themes import nord as _nord
 from .themes import one_dark as _one_dark
@@ -138,6 +139,15 @@ THEMES: dict[str, Theme] = {
         pygments_style=_solarized_light.PYGMENTS_STYLE,
         is_dark=_solarized_light.IS_DARK,
         source_url=_solarized_light.SOURCE_URL,
+    ),
+    "gruvbox-dark": Theme(
+        name="gruvbox-dark",
+        display_name=_gruvbox_dark.DISPLAY_NAME,
+        description=_gruvbox_dark.DESCRIPTION,
+        base_css=_gruvbox_dark.BASE_CSS,
+        pygments_style=_gruvbox_dark.PYGMENTS_STYLE,
+        is_dark=_gruvbox_dark.IS_DARK,
+        source_url=_gruvbox_dark.SOURCE_URL,
     ),
 }
 
