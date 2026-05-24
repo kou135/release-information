@@ -29,6 +29,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from .themes import midnight_museum as _midnight_museum
+from .themes import nord as _nord
 
 
 @dataclass(frozen=True)
@@ -78,6 +79,15 @@ THEMES: dict[str, Theme] = {
         pygments_style=_midnight_museum.PYGMENTS_STYLE,
         is_dark=_midnight_museum.IS_DARK,
         source_url=_midnight_museum.SOURCE_URL,
+    ),
+    "nord": Theme(
+        name="nord",
+        display_name=_nord.DISPLAY_NAME,
+        description=_nord.DESCRIPTION,
+        base_css=_nord.BASE_CSS,
+        pygments_style=_nord.PYGMENTS_STYLE,
+        is_dark=_nord.IS_DARK,
+        source_url=_nord.SOURCE_URL,
     ),
 }
 
