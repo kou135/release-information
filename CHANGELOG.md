@@ -7,7 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-_Nothing yet._
+### Added
+
+- 9 additional themes registered alongside `midnight-museum`:
+  `nord`, `tokyo-night`, `dracula`, `one-dark`, `github-light`,
+  `solarized-light`, `gruvbox-dark`, `catppuccin-mocha`, `monokai-classic`.
+- `--theme NAME` flag for `render` / `render-all` sub-commands.
+- `release-information themes` sub-command listing all registered themes
+  (name, display name, mode, one-line description).
+- `docs/themes/preview.html` gallery comparing all 10 themes side by side,
+  plus per-theme HTML previews (`docs/themes/<theme-name>.html`) rendered
+  from a shared `docs/themes/preview-source.md` source.
+
+### Changed
+
+- `core.theme` refactored into a `THEMES: dict[str, Theme]` registry. The
+  Midnight Museum theme is now registered under the name `midnight-museum`
+  and remains the default. No behaviour change for callers using
+  `render_markdown(md_text)` without `theme_name`.
 
 ## [0.1.1] - 2026-05-24
 

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>release-information — Theme Gallery</title>
+<style>
+  :root {
+    --bg: #0F172A;
+    --bg-card: #131E36;
+    --border: #1E293B;
+    --border-strong: #334155;
+    --fg: #E5E7EB;
+    --fg-dim: #94A3B8;
+    --accent: #C9A961;
+    --link: #93C5FD;
+    --link-hover: #BFDBFE;
+    --tag-dark-bg: #1E293B;
+    --tag-dark-fg: #93C5FD;
+    --tag-light-bg: #FEF3C7;
+    --tag-light-fg: #92400E;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--fg);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    padding: 48px 32px 96px;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; }
+  header { margin-bottom: 40px; border-bottom: 1px solid var(--border); padding-bottom: 24px; }
+  h1 {
+    font-family: "Hiragino Mincho ProN", "Noto Serif JP", "Times New Roman", serif;
+    font-weight: 400;
+    font-size: 36px;
+    margin: 0 0 8px 0;
+    color: var(--accent);
+    letter-spacing: 0.01em;
+  }
+  .tagline { margin: 0; color: var(--fg-dim); font-size: 15px; max-width: 64ch; }
+  .section-title {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--fg-dim);
+    margin: 40px 0 12px;
+    font-weight: 600;
+  }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 22px;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+  }
+  .card:hover {
+    border-color: var(--border-strong);
+    transform: translateY(-1px);
+  }
+  .card-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+  .card h2 {
+    margin: 0;
+    font-size: 18px;
+    color: var(--accent);
+    font-weight: 600;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  .mode {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 600;
+  }
+  .mode-dark { background: var(--tag-dark-bg); color: var(--tag-dark-fg); }
+  .mode-light { background: var(--tag-light-bg); color: var(--tag-light-fg); }
+  .card-name {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px;
+    color: var(--fg-dim);
+    margin: 0 0 12px 0;
+  }
+  .card-desc {
+    color: var(--fg-dim);
+    font-size: 14px;
+    margin: 0 0 18px 0;
+    flex: 1 1 auto;
+  }
+  .card a.preview-link {
+    color: var(--link);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    align-self: flex-start;
+  }
+  .card a.preview-link:hover { color: var(--link-hover); text-decoration: underline; }
+  footer {
+    margin-top: 56px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    color: var(--fg-dim);
+    font-size: 13px;
+  }
+  footer code {
+    background: var(--bg-card);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px;
+  }
+  footer a { color: var(--link); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>release-information — Theme Gallery</h1>
+    <p class="tagline">
+      Pick a theme below to preview the same Markdown source rendered with that
+      theme's palette and typography. Every preview is a single self-contained
+      HTML file — inline CSS, no external assets, no server required.
+    </p>
+  </header>
+
+  <div class="section-title">Dark themes</div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-head">
+        <h2>Midnight Museum</h2>
+        <span class="mode mode-dark">Dark</span>
+      </div>
+      <p class="card-name">midnight-museum</p>
+      <p class="card-desc">Anthropic-flavoured dark theme with serif headings and warm gold accents on a deep navy ground.</p>
+      <a class="preview-link" href="./midnight-museum.html">Open preview &rarr;</a>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h2>Nord</h2>
+        <span class="mode mode-dark">Dark</span>
+      </div>
+      <p class="card-name">nord</p>
+      <p class="card-desc">Arctic, north-bluish color palette designed for clarity and minimal eye strain.</p>
+      <a class="preview-link" href="./nord.html">Open preview &rarr;</a>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h2>Tokyo Night</h2>
+        <span class="mode mode-dark">Dark</span>
+      </div>
+      <p class="card-name">tokyo-night</p>
+      <p class="card-desc">Clean dark theme inspired by the night lights of Tokyo with vivid neon accents.</p>
+      <a class="preview-link" href="./tokyo-night.html">Open preview &rarr;</a>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h2>Dracula</h2>
+        <span class="mode mode-dark">Dark</span>
+      </div>
+      <p class="card-name">dracula</p>
+      <p class="card-desc">Classic dark theme with purple, pink, and cyan accents on a deep slate background.</p>
+      <a class="preview-link" href="./dracula.html">Open preview &rarr;</a>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h2>One Dark</h2>
+        <span class="mode mode-dark">Dark</span>
+      </div>
+      <p class="card-name">one-dark</p>
+      <p class="card-desc">Atom-flavoured dark theme with warm reds, greens, and blues on a muted slate.</p>
+      <a class="preview-link" href="./one-dark.html">Open preview &rarr;</a>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h2>Gruvbox Dark</h2>
+        <span class="mode mode-dark">Dark</span>
+      </div>
+      <p class="card-name">gruvbox-dark</p>
+      <p class="card-desc">Retro-groove dark theme with warm earth tones (Pavel Pertsev's gruvbox).</p>
+      <a class="preview-link" href="./gruvbox-dark.html">Open preview &rarr;</a>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h2>Catppuccin Mocha</h2>
+        <span class="mode mode-dark">Dark</span>
+      </div>
+      <p class="card-name">catppuccin-mocha</p>
+      <p class="card-desc">Soothing pastel dark theme (Mocha flavour) from the Catppuccin community.</p>
+      <a class="preview-link" href="./catppuccin-mocha.html">Open preview &rarr;</a>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h2>Monokai Classic</h2>
+        <span class="mode mode-dark">Dark</span>
+      </div>
+      <p class="card-name">monokai-classic</p>
+      <p class="card-desc">Original Monokai dark palette — vivid magenta, lime, and cyan on warm coal.</p>
+      <a class="preview-link" href="./monokai-classic.html">Open preview &rarr;</a>
+    </div>
+  </div>
+
+  <div class="section-title">Light themes</div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-head">
+        <h2>GitHub Light</h2>
+        <span class="mode mode-light">Light</span>
+      </div>
+      <p class="card-name">github-light</p>
+      <p class="card-desc">Clean light theme inspired by github.com / Primer with calm blues and greens.</p>
+      <a class="preview-link" href="./github-light.html">Open preview &rarr;</a>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <h2>Solarized Light</h2>
+        <span class="mode mode-light">Light</span>
+      </div>
+      <p class="card-name">solarized-light</p>
+      <p class="card-desc">Ethan Schoonover's precision-designed warm light palette with selective contrast.</p>
+      <a class="preview-link" href="./solarized-light.html">Open preview &rarr;</a>
+    </div>
+  </div>
+
+  <footer>
+    <p>
+      Pick a theme on the command line with the <code>--theme</code> flag, e.g.
+      <code>release-information render docs/release-information/v1.0.0.md --theme nord</code>.
+      List every registered theme with <code>release-information themes</code>.
+    </p>
+    <p>
+      Source for this gallery: <a href="./preview-source.md"><code>preview-source.md</code></a>.
+      Each per-theme HTML in this directory is generated from that single Markdown file.
+    </p>
+  </footer>
+</div>
+</body>
+</html>
