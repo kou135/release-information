@@ -1,6 +1,6 @@
 # release-information
 
-🌐 [English](./README.md) | **日本語** | [한국어](./README.ko.md)
+🌐 [English](./README.md) | **日本語** | [한국어](./README.ko.md) | [हिन्दी](./README.hi.md)
 
 [![CI](https://github.com/kou135/release-information/actions/workflows/ci.yml/badge.svg)](https://github.com/kou135/release-information/actions/workflows/ci.yml)
 [![Python](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
