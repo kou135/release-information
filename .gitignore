@@ -32,3 +32,6 @@ htmlcov/
 # Editors
 .idea/
 .vscode/
+
+# Local workspace archive (manual sanity checks, ad-hoc scratch)
+Archive/
