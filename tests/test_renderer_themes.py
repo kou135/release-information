@@ -9,6 +9,7 @@ Three assertions per theme:
 from __future__ import annotations
 
 from pathlib import Path
+
 import pytest
 
 from release_information.core.renderer import render_markdown

@@ -1,6 +1,7 @@
 """CLI tests for the --theme flag and themes sub-command."""
 from __future__ import annotations
 
+import re
 import shutil
 import subprocess
 from pathlib import Path
@@ -85,8 +86,6 @@ def test_cli_render_all_accepts_theme_flag(tmp_path: Path) -> None:
 
 
 # --- helpers ---
-
-import re
 
 _HEX_RE = re.compile(r"#[0-9a-fA-F]{6}\b")
 

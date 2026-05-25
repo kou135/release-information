@@ -7,6 +7,7 @@ satisfies the registry contract (Theme dataclass fields are populated).
 from __future__ import annotations
 
 import re
+
 import pytest
 from pygments.styles import get_all_styles
 
