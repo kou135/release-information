@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-_Nothing yet._
+### Added
+
+- i18n support for ja/ko/hi. New `--lang` CLI flag on `render` and
+  `render-all` subcommands; `release_information.core.i18n` module exposing
+  `resolve_locale` and `get_strings`. Locale resolution order: explicit
+  argument > `RELEASE_INFORMATION_LANG` > `LANG` > `en`. Translation packs
+  for ja/ko/hi land in subsequent commits.
 
 ## [0.3.0] - 2026-05-25
 

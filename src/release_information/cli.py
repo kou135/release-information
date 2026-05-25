@@ -9,12 +9,14 @@ Sub-commands
 
 ``render <FILE.md>``
     Render a single Markdown file. The resulting HTML is written next to the
-    input file with the ``.html`` suffix (same stem).
+    input file with the ``.html`` suffix (same stem). Accepts both
+    ``--theme NAME`` and ``--lang CODE`` (orthogonal: theme drives visual
+    palette, lang drives UI strings like the TOC title).
 
 ``render-all``
     Recursively render every ``docs/release-information/**/*.md`` under
     ``--root`` (defaults to the current working directory). Empty matches are
-    not an error; exit code 0 is returned.
+    not an error; exit code 0 is returned. Accepts ``--theme`` and ``--lang``.
 
 ``themes``
     Print a human-readable table of every registered theme (name, display
@@ -39,6 +41,7 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from . import __version__
+from .core.i18n import SUPPORTED_LOCALES
 from .core.renderer import render_markdown
 
 # Glob used by ``render-all`` (relative to ``--root``).
@@ -71,14 +74,26 @@ def _resolve_repo_root(arg: str | None) -> Path:
     return Path(result.stdout.strip()).resolve()
 
 
-def _render_file(md_path: Path, *, theme_name: str | None = None) -> Path:
+def _render_file(
+    md_path: Path,
+    *,
+    theme_name: str | None = None,
+    locale: str | None = None,
+) -> Path:
     """Render ``md_path`` to ``md_path.with_suffix('.html')`` and return the path.
 
-    ``theme_name`` is forwarded to :func:`render_markdown`; ``None`` keeps the
-    v0.1.1 Midnight Museum default for back-compatibility.
+    Both ``theme_name`` and ``locale`` are forwarded to :func:`render_markdown`.
+    ``theme_name=None`` keeps the v0.1.1 Midnight Museum default;
+    ``locale=None`` defers to the i18n resolver (env-var driven, default
+    ``"en"``).
     """
     md_text = md_path.read_text(encoding="utf-8")
-    html = render_markdown(md_text, title_fallback=md_path.stem, theme_name=theme_name)
+    html = render_markdown(
+        md_text,
+        title_fallback=md_path.stem,
+        theme_name=theme_name,
+        locale=locale,
+    )
     out_path = md_path.with_suffix(".html")
     out_path.write_text(html, encoding="utf-8")
     return out_path
@@ -90,7 +105,7 @@ def _cmd_render(args: argparse.Namespace) -> int:
         print(f"release-information: not a file: {md_path}", file=sys.stderr)
         return 2
     try:
-        out_path = _render_file(md_path, theme_name=args.theme)
+        out_path = _render_file(md_path, theme_name=args.theme, locale=args.lang)
     except ValueError as exc:
         # core.theme.get_theme() raises with an "available themes: ..." list.
         print(f"release-information: {exc}", file=sys.stderr)
@@ -110,7 +125,7 @@ def _cmd_render_all(args: argparse.Namespace) -> int:
         return 0
     for md_path in md_files:
         try:
-            out_path = _render_file(md_path, theme_name=args.theme)
+            out_path = _render_file(md_path, theme_name=args.theme, locale=args.lang)
         except ValueError as exc:
             # An unknown --theme value applies to every file in this batch, so
             # we can fail fast on the first iteration without partial output.
@@ -218,6 +233,15 @@ def _build_parser() -> argparse.ArgumentParser:
         default=None,
         help="theme name (default: midnight-museum). use `themes` sub-command to list.",
     )
+    p_render.add_argument(
+        "--lang",
+        choices=list(SUPPORTED_LOCALES),
+        default=None,
+        help=(
+            "output locale (default: resolved from RELEASE_INFORMATION_LANG / "
+            "LANG / 'en')"
+        ),
+    )
     p_render.set_defaults(func=_cmd_render)
 
     p_render_all = sub.add_parser(
@@ -233,6 +257,15 @@ def _build_parser() -> argparse.ArgumentParser:
         "--theme",
         default=None,
         help="theme name (default: midnight-museum). use `themes` sub-command to list.",
+    )
+    p_render_all.add_argument(
+        "--lang",
+        choices=list(SUPPORTED_LOCALES),
+        default=None,
+        help=(
+            "output locale (default: resolved from RELEASE_INFORMATION_LANG / "
+            "LANG / 'en')"
+        ),
     )
     p_render_all.set_defaults(func=_cmd_render_all)
 

@@ -22,6 +22,9 @@ Backward compatibility:
   existing call sites.
 * ``build_html(...)`` keeps its positional signature; the new ``theme=``
   parameter is keyword-only and defaults to the registry default.
+* The i18n layer (merged from feat-language) layers on top: ``html_lang`` and
+  optional ``brand_subtitle`` overrides let callers swap the per-locale
+  strings without touching the active theme's other branding.
 """
 
 from __future__ import annotations
@@ -60,7 +63,8 @@ class Theme:
     brand_title:
         Title shown in the sidebar aside (default ``"Release Information"``).
     brand_subtitle:
-        Subtitle shown under the brand title (default ``"Spec"``).
+        Subtitle shown under the brand title (default ``"Spec"``). The i18n
+        layer can override this per-locale via ``build_html(brand_subtitle=...)``.
     is_dark:
         Hint used by docs / preview gallery (does not affect rendering).
     source_url:
@@ -211,6 +215,8 @@ def build_html(
     pygments_css: str,
     *,
     theme: Theme | None = None,
+    html_lang: str = "en",
+    brand_subtitle: str | None = None,
 ) -> str:
     """Assemble the final single-file HTML document for the given theme.
 
@@ -227,6 +233,14 @@ def build_html(
     theme:
         Theme to render with. ``None`` falls back to :data:`DEFAULT_THEME_NAME`
         so existing call sites that omit the keyword stay working.
+    html_lang:
+        Value for ``<html lang="...">``. Defaults to ``"en"`` so callers that
+        do not opt into the i18n layer get the English baseline.
+    brand_subtitle:
+        Optional per-call override for the aside subtitle. ``None`` means
+        "use ``theme.brand_subtitle``" — that path preserves both the legacy
+        theme-driven branding and the per-locale i18n strings introduced by
+        ``feat-language``.
 
     Returns
     -------
@@ -235,9 +249,10 @@ def build_html(
     """
     if theme is None:
         theme = THEMES[DEFAULT_THEME_NAME]
+    subtitle = brand_subtitle if brand_subtitle is not None else theme.brand_subtitle
     return (
         '<!DOCTYPE html>\n'
-        '<html lang="ja">\n'
+        f'<html lang="{html_lang}">\n'
         '<head>\n'
         '<meta charset="UTF-8">\n'
         '<meta name="viewport" content="width=device-width, initial-scale=1.0">\n'
@@ -251,7 +266,7 @@ def build_html(
         '<div class="layout">\n'
         '  <aside class="toc">\n'
         f'    <div class="toc-brand">{theme.brand_title}</div>\n'
-        f'    <div class="toc-sub">{theme.brand_subtitle}</div>\n'
+        f'    <div class="toc-sub">{subtitle}</div>\n'
         f'    {toc}\n'
         '  </aside>\n'
         '  <main class="content">\n'
