@@ -33,6 +33,7 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from . import __version__
+from .core.i18n import SUPPORTED_LOCALES
 from .core.renderer import render_markdown
 
 # Glob used by ``render-all`` (relative to ``--root``).
@@ -65,10 +66,14 @@ def _resolve_repo_root(arg: str | None) -> Path:
     return Path(result.stdout.strip()).resolve()
 
 
-def _render_file(md_path: Path) -> Path:
-    """Render ``md_path`` to ``md_path.with_suffix('.html')`` and return the path."""
+def _render_file(md_path: Path, *, locale: str | None = None) -> Path:
+    """Render ``md_path`` to ``md_path.with_suffix('.html')`` and return the path.
+
+    ``locale`` is forwarded to :func:`render_markdown`; ``None`` defers locale
+    selection to the i18n resolver (env-var driven, default ``"en"``).
+    """
     md_text = md_path.read_text(encoding="utf-8")
-    html = render_markdown(md_text, title_fallback=md_path.stem)
+    html = render_markdown(md_text, title_fallback=md_path.stem, locale=locale)
     out_path = md_path.with_suffix(".html")
     out_path.write_text(html, encoding="utf-8")
     return out_path
@@ -79,7 +84,7 @@ def _cmd_render(args: argparse.Namespace) -> int:
     if not md_path.is_file():
         print(f"release-information: not a file: {md_path}", file=sys.stderr)
         return 2
-    out_path = _render_file(md_path)
+    out_path = _render_file(md_path, locale=args.lang)
     print(str(out_path))
     return 0
 
@@ -94,7 +99,7 @@ def _cmd_render_all(args: argparse.Namespace) -> int:
         # plan.md: "該当ディレクトリが空でもエラーにならず exit 0"
         return 0
     for md_path in md_files:
-        out_path = _render_file(md_path)
+        out_path = _render_file(md_path, locale=args.lang)
         print(str(out_path))
     return 0
 
@@ -161,6 +166,15 @@ def _build_parser() -> argparse.ArgumentParser:
 
     p_render = sub.add_parser("render", help="render a single Markdown file")
     p_render.add_argument("file", help="path to a Markdown file (.md)")
+    p_render.add_argument(
+        "--lang",
+        choices=list(SUPPORTED_LOCALES),
+        default=None,
+        help=(
+            "output locale (default: resolved from RELEASE_INFORMATION_LANG / "
+            "LANG / 'en')"
+        ),
+    )
     p_render.set_defaults(func=_cmd_render)
 
     p_render_all = sub.add_parser(
@@ -171,6 +185,15 @@ def _build_parser() -> argparse.ArgumentParser:
         "--root",
         default=".",
         help="root directory to scan (default: current working directory)",
+    )
+    p_render_all.add_argument(
+        "--lang",
+        choices=list(SUPPORTED_LOCALES),
+        default=None,
+        help=(
+            "output locale (default: resolved from RELEASE_INFORMATION_LANG / "
+            "LANG / 'en')"
+        ),
     )
     p_render_all.set_defaults(func=_cmd_render_all)
 

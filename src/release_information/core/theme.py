@@ -23,7 +23,7 @@ _BASE_CSS = """
   --border: #1E293B;
   --border-soft: #182338;
   --link: #93C5FD;
-  --serif: 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', 'Noto Serif JP', 'Times New Roman', serif;
+  --serif: 'Hiragino Mincho ProN', 'Yu Mincho', 'YuMincho', 'Noto Serif JP', 'Noto Sans Devanagari', 'Times New Roman', serif;
   --sans: -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
   --mono: 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
 }
@@ -324,7 +324,15 @@ BRAND_TITLE = "Release Information"
 BRAND_SUBTITLE = "Spec"
 
 
-def build_html(title: str, body: str, toc: str, pygments_css: str) -> str:
+def build_html(
+    title: str,
+    body: str,
+    toc: str,
+    pygments_css: str,
+    *,
+    html_lang: str = "en",
+    brand_subtitle: str = BRAND_SUBTITLE,
+) -> str:
     """Assemble the final single-file HTML document.
 
     Parameters
@@ -337,6 +345,12 @@ def build_html(title: str, body: str, toc: str, pygments_css: str) -> str:
         The ``markdown.Markdown`` ``toc`` attribute, already HTML.
     pygments_css:
         Stylesheet emitted by ``pygments.formatters.HtmlFormatter``.
+    html_lang:
+        Value for ``<html lang="...">``. Defaults to ``"en"`` so callers that
+        do not opt into the i18n layer get the English baseline.
+    brand_subtitle:
+        Aside brand subtitle. Defaults to :data:`BRAND_SUBTITLE` (``"Spec"``)
+        so legacy callers continue to render identically.
 
     Returns
     -------
@@ -345,7 +359,7 @@ def build_html(title: str, body: str, toc: str, pygments_css: str) -> str:
     """
     return (
         '<!DOCTYPE html>\n'
-        '<html lang="ja">\n'
+        f'<html lang="{html_lang}">\n'
         '<head>\n'
         '<meta charset="UTF-8">\n'
         '<meta name="viewport" content="width=device-width, initial-scale=1.0">\n'
@@ -359,7 +373,7 @@ def build_html(title: str, body: str, toc: str, pygments_css: str) -> str:
         '<div class="layout">\n'
         '  <aside class="toc">\n'
         f'    <div class="toc-brand">{BRAND_TITLE}</div>\n'
-        f'    <div class="toc-sub">{BRAND_SUBTITLE}</div>\n'
+        f'    <div class="toc-sub">{brand_subtitle}</div>\n'
         f'    {toc}\n'
         '  </aside>\n'
         '  <main class="content">\n'
