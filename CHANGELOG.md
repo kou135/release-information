@@ -15,6 +15,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   argument > `RELEASE_INFORMATION_LANG` > `LANG` > `en`. Translation packs
   for ja/ko/hi land in subsequent commits.
 
+## [0.3.0] - 2026-05-25
+
+### Added
+
+- 9 additional themes registered alongside `midnight-museum`:
+  `nord`, `tokyo-night`, `dracula`, `one-dark`, `github-light`,
+  `solarized-light`, `gruvbox-dark`, `catppuccin-mocha`, `monokai-classic`.
+- `--theme NAME` flag for `render` / `render-all` sub-commands.
+- `release-information themes` sub-command listing all registered themes
+  (name, display name, mode, one-line description).
+- `docs/themes/preview.html` gallery comparing all 10 themes side by side,
+  plus per-theme HTML previews (`docs/themes/<theme-name>.html`) rendered
+  from a shared `docs/themes/preview-source.md` source.
+
+### Changed
+
+- `core.theme` refactored into a `THEMES: dict[str, Theme]` registry. The
+  Midnight Museum theme is now registered under the name `midnight-museum`
+  and remains the default. No behaviour change for callers using
+  `render_markdown(md_text)` without `theme_name`.
+
 ## [0.1.1] - 2026-05-24
 
 ### Fixed
@@ -77,6 +98,7 @@ reusable, installable OSS package.
   file (`pre-commit`) or restores a single file (`pre-commit.backup`). The
   `.git/` directory is never traversed.
 
-[Unreleased]: https://github.com/kou135/release-information/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/kou135/release-information/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/kou135/release-information/compare/v0.1.1...v0.3.0
 [0.1.1]: https://github.com/kou135/release-information/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/kou135/release-information/releases/tag/v0.1.0

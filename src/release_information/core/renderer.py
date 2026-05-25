@@ -4,12 +4,16 @@ Ported from minima/scripts/render-spec.py. The rendering pipeline is:
 
 1. Parse Markdown with Python-Markdown (``extra``, ``toc``, ``codehilite``,
    ``sane_lists``, ``admonition``).
-2. If ``[TOC]`` is not present, inject it immediately after the first ``# `` heading
-   so every document gets a sidebar TOC by default.
+2. If ``[TOC]`` is not present, inject it immediately after the first ``# ``
+   heading so every document gets a sidebar TOC by default.
 3. Extract the first ``<h1>`` text as the document ``<title>`` (with a caller
    provided fallback).
-4. Build the syntax-highlighting stylesheet via Pygments (monokai).
-5. Compose the final HTML by handing everything to
+4. Resolve the requested theme (``theme_name`` kwarg or default) and build the
+   syntax-highlighting stylesheet via Pygments using ``theme.pygments_style``.
+5. Resolve the effective locale (``locale`` kwarg or env-driven) and pull
+   per-locale strings so the TOC title and aside subtitle reflect that
+   language while keeping all other branding from the active theme.
+6. Compose the final HTML by handing everything to
    :func:`release_information.core.theme.build_html`.
 """
 
@@ -22,7 +26,7 @@ import markdown
 from pygments.formatters import HtmlFormatter
 
 from .i18n import get_strings, resolve_locale
-from .theme import build_html
+from .theme import build_html, get_theme
 
 _MARKDOWN_EXTENSIONS: list[str] = [
     "extra",
@@ -87,6 +91,7 @@ def render_markdown(
     md_text: str,
     *,
     title_fallback: str = "",
+    theme_name: str | None = None,
     locale: str | None = None,
 ) -> str:
     """Render a Markdown string to a single-file HTML document.
@@ -97,6 +102,10 @@ def render_markdown(
         UTF-8 Markdown source.
     title_fallback:
         Used as the ``<title>`` value when no ``<h1>`` is present in ``md_text``.
+    theme_name:
+        Registry key of the theme to render with. ``None`` falls back to
+        :data:`release_information.core.theme.DEFAULT_THEME_NAME` so existing
+        callers that omit this kwarg keep the v0.1.1 Midnight Museum look.
     locale:
         Optional locale code (``"en"``, ``"ja"``, ``"ko"``, ``"hi"``). When
         ``None`` the effective locale is resolved via
@@ -107,7 +116,14 @@ def render_markdown(
     str
         A complete HTML5 document (``<!DOCTYPE html>`` through ``</html>``) with
         inline CSS, Pygments-highlighted code blocks, and an auto-injected TOC.
+
+    Raises
+    ------
+    ValueError
+        If ``theme_name`` is not present in the ``THEMES`` registry.
     """
+    theme = get_theme(theme_name)
+
     effective_locale = resolve_locale(locale)
     strings = get_strings(effective_locale)
 
@@ -124,13 +140,14 @@ def render_markdown(
         output_format="html5",
     )
     body = md.convert(prepared)
-    pygments_css = HtmlFormatter(style="monokai").get_style_defs(".codehilite")
+    pygments_css = HtmlFormatter(style=theme.pygments_style).get_style_defs(".codehilite")
     title = _extract_title(body, title_fallback)
     return build_html(
         title=title,
         body=body,
         toc=md.toc,
         pygments_css=pygments_css,
+        theme=theme,
         html_lang=strings["html_lang"],
         brand_subtitle=strings["brand_subtitle"],
     )

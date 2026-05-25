@@ -94,6 +94,35 @@ ls docs/release-information/
 # v1.0.0.md  v1.0.0.html   <- generated and committed together
 ```
 
+## Theme gallery
+
+`release-information` ships **10 themes** out of the box. Pick one with the
+`--theme` flag on `render` / `render-all`, or list them all with the
+`themes` sub-command:
+
+```bash
+release-information themes
+release-information render docs/release-information/v1.0.0.md --theme nord
+```
+
+Browse the full gallery at [`docs/themes/preview.html`](./docs/themes/preview.html)
+(open it locally — single-file HTML, no server needed). The same Markdown
+source ([`docs/themes/preview-source.md`](./docs/themes/preview-source.md))
+is rendered once per theme so you can compare them side by side.
+
+| name              | mode  | one-liner                                                         |
+|-------------------|-------|-------------------------------------------------------------------|
+| midnight-museum   | dark  | Anthropic-flavoured dark theme with serif headings, warm gold.    |
+| nord              | dark  | Arctic, north-bluish palette designed for clarity.                |
+| tokyo-night       | dark  | Clean dark theme with vivid neon accents.                         |
+| dracula           | dark  | Purple, pink, and cyan accents on a deep slate background.        |
+| one-dark          | dark  | Atom-flavoured warm reds, greens, and blues on muted slate.       |
+| gruvbox-dark      | dark  | Retro-groove warm earth tones (Pavel Pertsev's gruvbox).          |
+| catppuccin-mocha  | dark  | Soothing pastel dark theme (Mocha flavour) from Catppuccin.       |
+| monokai-classic   | dark  | Vivid magenta, lime, and cyan on warm coal.                       |
+| github-light      | light | Clean light theme inspired by github.com / Primer.                |
+| solarized-light   | light | Ethan Schoonover's warm light palette with selective contrast.    |
+
 ## Usage
 
 ```text
@@ -112,6 +141,10 @@ release-information version
 release-information render docs/release-information/v1.0.0.md
 # writes docs/release-information/v1.0.0.html (same stem, same directory)
 # prints the absolute path of the output to stdout
+
+release-information render docs/release-information/v1.0.0.md --theme nord
+# same, but rendered with the `nord` theme instead of the default
+# (`midnight-museum`). See `release-information themes` for the full list.
 ```
 
 ### `render-all` — bulk re-render
@@ -119,9 +152,18 @@ release-information render docs/release-information/v1.0.0.md
 ```bash
 release-information render-all                # uses CWD as --root
 release-information render-all --root ./repo  # explicit root
+release-information render-all --theme nord   # apply the same theme to every file
 
 # Globs docs/release-information/**/*.md (recursive) and re-renders each.
 # An empty match is *not* an error: exit code 0.
+```
+
+### `themes` — list registered themes
+
+```bash
+release-information themes
+# Prints one line per registered theme: name, display name, mode (dark/light),
+# and a short description. Use any name with --theme on render / render-all.
 ```
 
 ### `install` / `uninstall` — manage the pre-commit hook
@@ -190,7 +232,7 @@ Maintainers: see [`docs/PUBLISHING.md`](./docs/PUBLISHING.md) for the PyPI relea
 ## Roadmap (out of scope for v0.1.0)
 
 - `pre-commit` framework (`.pre-commit-hooks.yaml`) integration alongside the bundled hook
-- Multi-theme switching via CLI flag
+- Front-matter driven theme selection per file (`theme:` key in YAML front-matter)
 - Front-matter driven release note structure (`version`, `date`, `breaking` keys)
 - npm distribution / Husky bridge
 - Windows pre-commit hook (PowerShell)
