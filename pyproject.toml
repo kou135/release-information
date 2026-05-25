@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "release-information"
-version = "0.1.1"
+version = "0.3.0"
 description = "Pre-commit driven Markdown -> single-file HTML renderer for release notes / specs."
 readme = "README.md"
 requires-python = ">=3.10"
