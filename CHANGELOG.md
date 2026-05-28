@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `release-information delete --file <NAME>` sub-command: removes
+  `<repo_root>/docs/release-information/<NAME>.md` and the matching
+  `.html` in one call. Path traversal (`..`, `/`, absolute paths) and
+  symlinks are rejected (exit code 2). Accepts either bare names or
+  names with the `.md` extension.
 - i18n support for ja/ko/hi. New `--lang` CLI flag on `render` and
   `render-all` subcommands; `release_information.core.i18n` module exposing
   `resolve_locale` and `get_strings`. Locale resolution order: explicit
