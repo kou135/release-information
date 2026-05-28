@@ -70,12 +70,12 @@ pipx install git+https://github.com/kou135/release-information.git
 cd ~/workspace/your-project
 
 # 3. pre-commit hook को <repo>/.git/hooks/pre-commit में इंस्टॉल करें
+#    (यदि docs/release-information/ नहीं है तो वह भी बन जाती है — नीचे "install" अनुभाग देखें)
 release-information install
 #   - पहले से pre-commit hook मौजूद है? पहले बैकअप लें: release-information install --force
 #   - .git गायब है? आपको एक स्पष्ट त्रुटि मिलती है, और कुछ नहीं लिखा जाता।
 
-# 4. एक रिलीज़ नोट जोड़ें
-mkdir -p docs/release-information
+# 4. एक रिलीज़ नोट जोड़ें (ऊपर का install डायरेक्टरी बना चुका है, mkdir की आवश्यकता नहीं)
 cat > docs/release-information/v1.0.0.md <<'EOF'
 # v1.0.0
 
@@ -133,6 +133,10 @@ release-information install                   # <repo>/.git/hooks/pre-commit ल
 release-information install --force           # मौजूदा hook को अधिलेखित करता है (बैकअप के साथ)
 release-information uninstall                 # बैकअप पुनर्स्थापित करता है, या हमारा hook हटाता है
 ```
+
+साइड-इफ़ेक्ट: `install` `<repo>/docs/release-information/` को भी बनाता है
+(`mkdir -p`, idempotent)। पहले Quick start में दिए गए
+`mkdir -p docs/release-information` चरण की अब आवश्यकता नहीं है।
 
 hook केवल `docs/release-information/**/*.md` से मेल खाने वाली स्टेज की हुई फ़ाइलों पर ही कार्य
 करता है। किसी अन्य Markdown फ़ाइल (कोई `README.md`, कोई `docs/blog/*.md`, आदि) में किए गए
