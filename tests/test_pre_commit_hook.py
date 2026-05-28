@@ -100,7 +100,9 @@ def test_pre_commit_hook_renders_staged_markdown_into_same_commit(
     the resulting HTML, so both files appear in the same commit.
     """
     docs = hooked_repo / "docs" / "release-information"
-    docs.mkdir(parents=True)
+    # ``install()`` (run by the hooked_repo fixture) now creates this directory
+    # itself, so the test must tolerate the directory already existing.
+    docs.mkdir(parents=True, exist_ok=True)
     md = docs / "v0.1.0.md"
     md.write_text(
         "# v0.1.0\n\nInitial release of release-information.\n",
