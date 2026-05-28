@@ -103,6 +103,7 @@ release-information render <FILE.md>
 release-information render-all [--root .]
 release-information install [--repo-root PATH] [--force]
 release-information uninstall [--repo-root PATH]
+release-information delete --file <NAME> [--repo-root PATH]
 release-information version
 ```
 
@@ -139,6 +140,20 @@ release-information uninstall                 # バックアップを復元、�
 hook は `docs/release-information/**/*.md` にマッチするステージ済みファイルにのみ作用します。
 それ以外の Markdown ファイル (`README.md`、`docs/blog/*.md` 等) の編集は完全に無視され、
 hook は exit 0 で短絡します。
+
+### `delete` — 仕様書とその HTML を削除
+
+```bash
+release-information delete --file v1.0.0
+# docs/release-information/v1.0.0.md と docs/release-information/v1.0.0.html を削除する
+# `--file` 引数は `v1.0.0` でも `v1.0.0.md` でも受け付ける (拡張子は内部で除去)
+```
+
+`.md` と `.html` を 1 コマンドで両方削除します。ペアの片方しか存在しない
+場合は、存在する方だけが削除されます。パストラバーサル (`..`、`/`、絶対
+パス) と `docs/release-information/` 配下のシンボリックリンクは exit code 2
+で拒否されます。どちらのファイルも存在しない場合は、exit code 2 で
+stderr に `no such file` メッセージが出力されます。
 
 ## 設計思想
 

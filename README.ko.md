@@ -103,6 +103,7 @@ release-information render <FILE.md>
 release-information render-all [--root .]
 release-information install [--repo-root PATH] [--force]
 release-information uninstall [--repo-root PATH]
+release-information delete --file <NAME> [--repo-root PATH]
 release-information version
 ```
 
@@ -139,6 +140,20 @@ release-information uninstall                 # 백업을 복원하거나 자체
 hook 은 `docs/release-information/**/*.md` 에 일치하는 스테이지된 파일에만 작용합니다.
 그 외의 Markdown 파일 (`README.md`, `docs/blog/*.md` 등) 의 편집은 완전히 무시되며,
 hook 은 exit 0 으로 단락됩니다.
+
+### `delete` — 사양서와 HTML 을 제거
+
+```bash
+release-information delete --file v1.0.0
+# docs/release-information/v1.0.0.md 와 docs/release-information/v1.0.0.html 을 제거
+# `--file` 인수는 `v1.0.0` 또는 `v1.0.0.md` 둘 다 허용 (확장자는 내부에서 제거됨)
+```
+
+`.md` 와 `.html` 을 한 번의 호출로 모두 제거합니다. 쌍 중 한쪽만 존재하면
+존재하는 파일만 제거됩니다. 경로 탐색 (`..`, `/`, 절대 경로) 과
+`docs/release-information/` 아래의 심볼릭 링크는 exit code 2 로 거부됩니다.
+두 파일 모두 존재하지 않으면 exit code 2 로 종료되며 stderr 에
+`no such file` 메시지가 출력됩니다.
 
 ## 설계 철학
 

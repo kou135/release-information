@@ -132,6 +132,7 @@ release-information render <FILE.md>
 release-information render-all [--root .]
 release-information install [--repo-root PATH] [--force]
 release-information uninstall [--repo-root PATH]
+release-information delete --file <NAME> [--repo-root PATH]
 release-information version
 ```
 
@@ -181,6 +182,20 @@ Side effect: `install` also ensures `<repo>/docs/release-information/` exists
 The hook only acts on staged files matching `docs/release-information/**/*.md`. Edits to
 any other Markdown file (a `README.md`, a `docs/blog/*.md`, etc.) are ignored entirely;
 the hook short-circuits with exit 0.
+
+### `delete` — remove a spec and its HTML
+
+```bash
+release-information delete --file v1.0.0
+# removes docs/release-information/v1.0.0.md and docs/release-information/v1.0.0.html
+# the `--file` argument accepts either `v1.0.0` or `v1.0.0.md` (extension stripped)
+```
+
+Both `.md` and `.html` are removed in one call. If only one of the pair
+exists, only that file is removed. Path traversal (`..`, `/`, absolute
+paths) and symlinks under `docs/release-information/` are rejected with
+exit code 2. If neither file exists, the command exits with code 2 and
+prints a `no such file` message to stderr.
 
 ## Design philosophy
 
