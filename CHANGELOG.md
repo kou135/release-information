@@ -14,6 +14,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `resolve_locale` and `get_strings`. Locale resolution order: explicit
   argument > `RELEASE_INFORMATION_LANG` > `LANG` > `en`. Translation packs
   for ja/ko/hi land in subsequent commits.
+- `release-information install` now ensures `<repo_root>/docs/release-information/`
+  exists (idempotent, `exist_ok=True`). The `mkdir -p docs/release-information`
+  step previously documented in the Quick start is no longer required. The
+  CLI also prints an `ensured: <path>/` line alongside the existing
+  `installed: <hook_path>` output.
 
 ## [0.3.0] - 2026-05-25
 
