@@ -58,7 +58,14 @@ def test_cli_help_lists_all_subcommands(tmp_path: Path) -> None:
     result = _run("--help", cwd=tmp_path)
 
     assert result.returncode == 0, result.stderr
-    for sub in ("render", "render-all", "install", "uninstall", "version"):
+    for sub in (
+        "render",
+        "render-all",
+        "install",
+        "uninstall",
+        "delete",
+        "version",
+    ):
         assert sub in result.stdout, (
             f"sub-command {sub!r} missing from --help output:\n{result.stdout}"
         )
@@ -133,6 +140,103 @@ def test_cli_render_all_errors_when_root_missing(tmp_path: Path) -> None:
     bogus = tmp_path / "no-such-dir"
     result = _run("render-all", "--root", str(bogus), cwd=tmp_path)
     assert result.returncode == 2
+
+
+def _init_git_repo(path: Path) -> None:
+    """Helper: ``git init`` the given path so ``_resolve_repo_root`` can find it."""
+    subprocess.run(
+        ["git", "init", "--quiet"],
+        cwd=path,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+
+def test_cli_delete_removes_both_files(tmp_path: Path) -> None:
+    """``delete --file <name>`` removes both .md and .html under docs/release-information/."""
+    _init_git_repo(tmp_path)
+    docs = tmp_path / "docs" / "release-information"
+    docs.mkdir(parents=True)
+    md = docs / "v0.1.0.md"
+    html = docs / "v0.1.0.html"
+    md.write_text("# Doc\n", encoding="utf-8")
+    html.write_text("<html></html>", encoding="utf-8")
+
+    result = _run(
+        "delete",
+        "--file",
+        "v0.1.0",
+        "--repo-root",
+        str(tmp_path),
+        cwd=tmp_path,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert not md.exists()
+    assert not html.exists()
+    # stdout reports both removed paths.
+    assert str(md) in result.stdout
+    assert str(html) in result.stdout
+
+
+def test_cli_delete_accepts_md_extension(tmp_path: Path) -> None:
+    """``--file v0.1.0.md`` and ``--file v0.1.0`` are equivalent."""
+    _init_git_repo(tmp_path)
+    docs = tmp_path / "docs" / "release-information"
+    docs.mkdir(parents=True)
+    md = docs / "v0.1.0.md"
+    md.write_text("# Doc\n", encoding="utf-8")
+
+    result = _run(
+        "delete",
+        "--file",
+        "v0.1.0.md",
+        "--repo-root",
+        str(tmp_path),
+        cwd=tmp_path,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert not md.exists()
+
+
+def test_cli_delete_returns_2_for_missing(tmp_path: Path) -> None:
+    """If neither file exists, exit code is 2 with a ``no such file`` message."""
+    _init_git_repo(tmp_path)
+    docs = tmp_path / "docs" / "release-information"
+    docs.mkdir(parents=True)
+
+    result = _run(
+        "delete",
+        "--file",
+        "nope",
+        "--repo-root",
+        str(tmp_path),
+        cwd=tmp_path,
+    )
+
+    assert result.returncode == 2
+    assert "no such file" in result.stderr
+
+
+def test_cli_delete_returns_2_for_path_traversal(tmp_path: Path) -> None:
+    """Path traversal in ``--file`` is rejected with exit code 2."""
+    _init_git_repo(tmp_path)
+    (tmp_path / "docs" / "release-information").mkdir(parents=True)
+
+    result = _run(
+        "delete",
+        "--file",
+        "../../etc/passwd",
+        "--repo-root",
+        str(tmp_path),
+        cwd=tmp_path,
+    )
+
+    assert result.returncode == 2
+    # The error must come from our sanitizer, not from a downstream OS error.
+    assert "release-information:" in result.stderr
 
 
 def test_python_dash_m_invocation_works(tmp_path: Path) -> None:
