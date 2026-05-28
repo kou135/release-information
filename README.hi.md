@@ -105,6 +105,7 @@ release-information render <FILE.md>
 release-information render-all [--root .]
 release-information install [--repo-root PATH] [--force]
 release-information uninstall [--repo-root PATH]
+release-information delete --file <NAME> [--repo-root PATH]
 release-information version
 ```
 
@@ -137,6 +138,20 @@ release-information uninstall                 # बैकअप पुनर्�
 hook केवल `docs/release-information/**/*.md` से मेल खाने वाली स्टेज की हुई फ़ाइलों पर ही कार्य
 करता है। किसी अन्य Markdown फ़ाइल (कोई `README.md`, कोई `docs/blog/*.md`, आदि) में किए गए
 संपादन पूरी तरह से अनदेखे कर दिए जाते हैं; hook exit 0 के साथ शॉर्ट-सर्किट हो जाता है।
+
+### `delete` — एक विनिर्देश और उसके HTML को हटाएँ
+
+```bash
+release-information delete --file v1.0.0
+# docs/release-information/v1.0.0.md और docs/release-information/v1.0.0.html हटाता है
+# `--file` तर्क `v1.0.0` और `v1.0.0.md` दोनों को स्वीकार करता है (एक्सटेंशन हटा दिया जाता है)
+```
+
+`.md` और `.html` दोनों एक ही कॉल में हटा दिए जाते हैं। यदि जोड़े में से केवल एक ही
+मौजूद हो, तो केवल वह फ़ाइल हटाई जाती है। पथ ट्रैवर्सल (`..`, `/`, पूर्ण पथ) और
+`docs/release-information/` के अंतर्गत सिमलिंक exit code 2 के साथ अस्वीकार किए
+जाते हैं। यदि कोई भी फ़ाइल मौजूद नहीं है, तो कमांड exit code 2 के साथ समाप्त होती
+है और stderr पर `no such file` संदेश प्रिंट करती है।
 
 ## डिज़ाइन दर्शन
 
