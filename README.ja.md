@@ -68,12 +68,12 @@ pipx install git+https://github.com/kou135/release-information.git
 cd ~/workspace/your-project
 
 # 3. pre-commit hook を <repo>/.git/hooks/pre-commit にインストール
+#    (docs/release-information/ が無ければ同時に作成される — 下の "install" 節参照)
 release-information install
 #   - 既存の pre-commit hook がある? まず: release-information install --force でバックアップ
 #   - .git が無い? 明示的にエラーが出るだけで、何も書かれない。
 
-# 4. リリースノートを追加
-mkdir -p docs/release-information
+# 4. リリースノートを追加 (上の install がディレクトリを作っているので mkdir は不要)
 cat > docs/release-information/v1.0.0.md <<'EOF'
 # v1.0.0
 
@@ -131,6 +131,10 @@ release-information install                   # <repo>/.git/hooks/pre-commit を
 release-information install --force           # 既存 hook を上書き (バックアップ済み)
 release-information uninstall                 # バックアップを復元、または自前 hook を削除
 ```
+
+副作用: `install` は `<repo>/docs/release-information/` も作成します
+(`mkdir -p`、冪等)。これまで Quick start で手順として案内していた
+`mkdir -p docs/release-information` は不要になりました。
 
 hook は `docs/release-information/**/*.md` にマッチするステージ済みファイルにのみ作用します。
 それ以外の Markdown ファイル (`README.md`、`docs/blog/*.md` 等) の編集は完全に無視され、

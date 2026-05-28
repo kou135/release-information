@@ -12,6 +12,12 @@ Behavior overview
          - with ``force=True``: copy it to ``pre-commit.backup`` and overwrite.
     4. Copy the bundled :mod:`templates.pre-commit.sh` to ``pre-commit`` and
        set mode ``0o755``.
+    5. Ensure ``<repo_root>/docs/release-information/`` exists
+       (``mkdir(parents=True, exist_ok=True)``). This is idempotent: if the
+       directory already exists, its contents are preserved untouched. The
+       step folds the previously documented ``mkdir -p docs/release-information``
+       Quick-start instruction into the ``install`` command so users do not
+       need to remember it before adding their first release note.
 
 ``uninstall(repo_root)``
     1. Verify ``repo_root / ".git"`` exists.
@@ -24,8 +30,9 @@ Behavior overview
 Safety constraints
 ------------------
 
-- All writes are confined to ``<repo_root>/.git/hooks/``. No other path is ever
-  touched.
+- Writes are confined to ``<repo_root>/.git/hooks/`` and to
+  ``<repo_root>/docs/release-information/`` (an empty ``mkdir`` only — no
+  files are created inside it). No other path is ever touched.
 - We never use :func:`os.remove` recursively — only single-file
   :meth:`Path.unlink` / :func:`shutil.copy2`.
 - We never invoke ``git`` here; the caller (CLI) resolves ``repo_root``.
@@ -104,6 +111,14 @@ def install(repo_root: Path, *, force: bool = False) -> Path:
     target.chmod(
         stat.S_IRWXU | stat.S_IRGRP | stat.S_IXGRP | stat.S_IROTH | stat.S_IXOTH
     )
+
+    # Ensure <repo_root>/docs/release-information/ exists. This is the
+    # convention directory the hook scans on every commit, and the previous
+    # README Quick-start manual `mkdir -p docs/release-information` step is
+    # now folded into `install`. Idempotent: existing contents are preserved.
+    docs_dir = repo_root / "docs" / "release-information"
+    docs_dir.mkdir(parents=True, exist_ok=True)
+
     return target
 
 

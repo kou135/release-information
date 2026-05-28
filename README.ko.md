@@ -68,12 +68,12 @@ pipx install git+https://github.com/kou135/release-information.git
 cd ~/workspace/your-project
 
 # 3. pre-commit hook 을 <repo>/.git/hooks/pre-commit 에 설치
+#    (docs/release-information/ 가 없으면 함께 생성됩니다 — 아래 "install" 절 참고)
 release-information install
 #   - 기존 pre-commit hook 이 있나요? 먼저: release-information install --force 로 백업
 #   - .git 이 없나요? 명시적인 에러만 표시되고 아무것도 기록되지 않습니다.
 
-# 4. 릴리스 노트를 추가
-mkdir -p docs/release-information
+# 4. 릴리스 노트를 추가 (위의 install 이 디렉터리를 만들었으므로 mkdir 은 필요 없음)
 cat > docs/release-information/v1.0.0.md <<'EOF'
 # v1.0.0
 
@@ -131,6 +131,10 @@ release-information install                   # <repo>/.git/hooks/pre-commit 을
 release-information install --force           # 기존 hook 을 덮어쓰기 (백업 후)
 release-information uninstall                 # 백업을 복원하거나 자체 hook 을 제거
 ```
+
+부수 효과: `install` 은 `<repo>/docs/release-information/` 도 생성합니다
+(`mkdir -p`, 멱등). 기존에 Quick start 에서 안내하던
+`mkdir -p docs/release-information` 단계는 더 이상 필요하지 않습니다.
 
 hook 은 `docs/release-information/**/*.md` 에 일치하는 스테이지된 파일에만 작용합니다.
 그 외의 Markdown 파일 (`README.md`, `docs/blog/*.md` 등) 의 편집은 완전히 무시되며,

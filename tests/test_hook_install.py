@@ -141,3 +141,43 @@ def test_uninstall_raises_filenotfounderror_when_not_a_git_tree(tmp_path: Path) 
     assert not (tmp_path / ".git").exists()
     with pytest.raises(FileNotFoundError):
         uninstall(tmp_path)
+
+
+def test_install_creates_docs_release_information_dir(tmp_git_repo: Path) -> None:
+    """install() must also create ``<repo_root>/docs/release-information/``.
+
+    The directory is the convention path the pre-commit hook scans on every
+    commit. Creating it here folds the previously documented
+    ``mkdir -p docs/release-information`` Quick-start step into ``install``.
+    """
+    docs_dir = tmp_git_repo / "docs" / "release-information"
+    assert not docs_dir.exists(), "fixture must start without the docs dir"
+
+    install(tmp_git_repo, force=False)
+
+    assert docs_dir.is_dir(), (
+        f"expected {docs_dir} to be created as a side effect of install()"
+    )
+
+
+def test_install_is_idempotent_when_docs_dir_already_exists(
+    tmp_git_repo: Path,
+) -> None:
+    """install() must not raise when docs/release-information/ already exists.
+
+    Pre-existing files inside the directory must be preserved (no recursive
+    delete, no overwrite).
+    """
+    docs_dir = tmp_git_repo / "docs" / "release-information"
+    docs_dir.mkdir(parents=True)
+    sentinel = docs_dir / "user-note.md"
+    sentinel_body = "# pre-existing release note\n\nuser content.\n"
+    sentinel.write_text(sentinel_body, encoding="utf-8")
+
+    # Must not raise (idempotent ``mkdir(..., exist_ok=True)``).
+    install(tmp_git_repo, force=False)
+
+    # Directory still there, sentinel file untouched.
+    assert docs_dir.is_dir()
+    assert sentinel.is_file(), "pre-existing file must survive install()"
+    assert sentinel.read_text(encoding="utf-8") == sentinel_body

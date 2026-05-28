@@ -186,6 +186,12 @@ def _cmd_install(args: argparse.Namespace) -> int:
         print(f"release-information: {exc}", file=sys.stderr)
         return 2
     print(f"installed: {hook_path}")
+    # ``hooks_install`` has already created the directory (idempotent,
+    # ``exist_ok=True``); we only surface the path so users see that the
+    # previously documented ``mkdir -p docs/release-information`` step is no
+    # longer required.
+    docs_dir = repo_root / "docs" / "release-information"
+    print(f"ensured: {docs_dir}/")
     return 0
 
 

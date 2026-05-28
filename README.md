@@ -68,12 +68,12 @@ pipx install git+https://github.com/kou135/release-information.git
 cd ~/workspace/your-project
 
 # 3. install the pre-commit hook into <repo>/.git/hooks/pre-commit
+#    (also creates docs/release-information/ if missing — see "install" below)
 release-information install
 #   - existing pre-commit hook? back it up first with: release-information install --force
 #   - .git missing? you get an explicit error, nothing else is written.
 
-# 4. add a release note
-mkdir -p docs/release-information
+# 4. add a release note (the directory was created by `install` above)
 cat > docs/release-information/v1.0.0.md <<'EOF'
 # v1.0.0
 
@@ -173,6 +173,10 @@ release-information install                   # writes <repo>/.git/hooks/pre-com
 release-information install --force           # overwrite existing hook (backed up)
 release-information uninstall                 # restore backup, or remove our hook
 ```
+
+Side effect: `install` also ensures `<repo>/docs/release-information/` exists
+(`mkdir -p`, idempotent). The previously documented manual
+`mkdir -p docs/release-information` Quick-start step is no longer required.
 
 The hook only acts on staged files matching `docs/release-information/**/*.md`. Edits to
 any other Markdown file (a `README.md`, a `docs/blog/*.md`, etc.) are ignored entirely;
