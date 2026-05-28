@@ -28,6 +28,13 @@ Sub-commands
     Manage the ``.git/hooks/pre-commit`` hook of a target repository. See
     :mod:`release_information.hooks.install` for the underlying logic.
 
+``delete --file <NAME>``
+    Remove ``<repo_root>/docs/release-information/<NAME>.md`` and the matching
+    ``<NAME>.html`` in one call. ``<NAME>`` accepts either the bare stem or
+    the same name with the ``.md`` extension (the suffix is stripped).
+    See :mod:`release_information.files.delete` for the underlying logic
+    and safety rails (path traversal / symlink rejection).
+
 ``version``
     Print :data:`release_information.__version__`.
 """
@@ -205,6 +212,25 @@ def _cmd_uninstall(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_delete(args: argparse.Namespace) -> int:
+    # Lazy import for symmetry with _cmd_install (keep render/themes hot paths
+    # free of files.delete import cost).
+    from .files.delete import delete as files_delete
+
+    repo_root = _resolve_repo_root(args.repo_root)
+    try:
+        removed = files_delete(repo_root, args.file)
+    except ValueError as exc:
+        print(f"release-information: {exc}", file=sys.stderr)
+        return 2
+    except FileNotFoundError as exc:
+        print(f"release-information: {exc}", file=sys.stderr)
+        return 2
+    for path in removed:
+        print(str(path))
+    return 0
+
+
 def _cmd_version(_args: argparse.Namespace) -> int:
     print(__version__)
     return 0
@@ -301,6 +327,22 @@ def _build_parser() -> argparse.ArgumentParser:
         help="path to the git repository (default: `git rev-parse --show-toplevel`)",
     )
     p_uninstall.set_defaults(func=_cmd_uninstall)
+
+    p_delete = sub.add_parser(
+        "delete",
+        help="delete a Markdown spec and its generated HTML under docs/release-information/",
+    )
+    p_delete.add_argument(
+        "--file",
+        required=True,
+        help="name of the spec file (extension optional; `.md` is stripped if present)",
+    )
+    p_delete.add_argument(
+        "--repo-root",
+        default=None,
+        help="path to the git repository (default: `git rev-parse --show-toplevel`)",
+    )
+    p_delete.set_defaults(func=_cmd_delete)
 
     p_version = sub.add_parser("version", help="print release-information version")
     p_version.set_defaults(func=_cmd_version)
