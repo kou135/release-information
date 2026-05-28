@@ -153,6 +153,31 @@ def _init_git_repo(path: Path) -> None:
     )
 
 
+def test_cli_install_creates_docs_release_information_dir(tmp_path: Path) -> None:
+    """``release-information install --repo-root <path>`` also mkdirs docs/release-information/.
+
+    Exercised through the actual CLI entry point (not the Python API) so we
+    catch any regression in ``_cmd_install`` argument plumbing.
+    """
+    # git init the tmp_path so install() does not bail on the .git check.
+    _init_git_repo(tmp_path)
+
+    docs_dir = tmp_path / "docs" / "release-information"
+    assert not docs_dir.exists()
+
+    result = _run("install", "--repo-root", str(tmp_path), cwd=tmp_path)
+
+    assert result.returncode == 0, result.stderr
+    assert docs_dir.is_dir(), (
+        f"expected {docs_dir} to be created by `release-information install`"
+    )
+    # stdout should mention both the hook and the docs dir so users see the
+    # side effect explicitly.
+    assert "installed:" in result.stdout
+    assert "ensured:" in result.stdout
+    assert str(docs_dir) in result.stdout
+
+
 def test_cli_delete_removes_both_files(tmp_path: Path) -> None:
     """``delete --file <name>`` removes both .md and .html under docs/release-information/."""
     _init_git_repo(tmp_path)
