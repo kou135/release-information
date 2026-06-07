@@ -86,3 +86,11 @@ def test_get_theme_unknown_raises_valueerror_with_listing() -> None:
     # ensure the error message helps the caller discover what is available
     for name in THEMES:
         assert name in msg, f"theme name {name!r} missing from error message: {msg}"
+
+
+def test_github_dark_theme_is_registered_and_is_dark() -> None:
+    """Regression guard: github-dark must be present and flagged as a dark theme."""
+    assert "github-dark" in THEMES, "github-dark is not registered in THEMES"
+    assert THEMES["github-dark"].is_dark is True, (
+        "github-dark.is_dark should be True"
+    )
