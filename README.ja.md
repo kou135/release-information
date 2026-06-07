@@ -8,8 +8,9 @@
 
 リリースノートや設計仕様向けの、git pre-commit 駆動の Markdown → 単一 HTML ファイルレンダラー。
 `docs/release-information/` 配下に Markdown ファイルを置いて commit するだけで、
-Anthropic 風 **Midnight Museum** ダークテーマ・インライン CSS・目次の自動生成・外部依存ゼロの
+**Tokyo Night** ダークテーマ（デフォルト）・インライン CSS・目次の自動生成・外部依存ゼロの
 自己完結型 HTML ドキュメントが再生成され、同じ commit にステージングされます。
+Midnight Museum をはじめ、他の全テーマも `--theme` で引き続き選択可能です。
 
 ## なぜこの OSS なのか (`python-markdown` 直接 / MkDocs / Quarto / Pandoc ではなく)
 

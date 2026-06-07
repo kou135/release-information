@@ -7,9 +7,10 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
 
 릴리스 노트와 설계 사양을 위한, git pre-commit 기반의 Markdown → 단일 HTML 파일 렌더러입니다.
-`docs/release-information/` 아래에 Markdown 파일을 두고 commit 하기만 하면, Anthropic 스타일의
-**Midnight Museum** 다크 테마 · 인라인 CSS · 자동 목차 · 외부 의존성 0 의 자기 완결형 HTML 문서가
+`docs/release-information/` 아래에 Markdown 파일을 두고 commit 하기만 하면, **Tokyo Night**
+다크 테마(기본값) · 인라인 CSS · 자동 목차 · 외부 의존성 0 의 자기 완결형 HTML 문서가
 다시 생성되어 같은 commit 에 스테이징됩니다.
+Midnight Museum 을 비롯한 모든 테마는 `--theme` 으로 계속 선택할 수 있습니다.
 
 ## 왜 이 OSS 인가 (`python-markdown` 직접 / MkDocs / Quarto / Pandoc 이 아니라)
 
