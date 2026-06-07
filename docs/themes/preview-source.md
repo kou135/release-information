@@ -13,7 +13,7 @@ click through to any theme's rendered HTML.
 ## At a glance
 
 `release-information` is a Markdown to single-file HTML renderer for release
-notes and design specs. It ships with **10 themes** out of the box — five
+notes and design specs. It ships with **11 themes** out of the box — six
 dark, two light, and a handful of designer-classic ports. Pick one with the
 `--theme` flag on `render` or `render-all`, or list them all with the
 `themes` sub-command.
@@ -98,7 +98,8 @@ release-information themes
     {"name": "solarized-light", "mode": "light"},
     {"name": "gruvbox-dark",    "mode": "dark"},
     {"name": "catppuccin-mocha","mode": "dark"},
-    {"name": "monokai-classic", "mode": "dark"}
+    {"name": "monokai-classic", "mode": "dark"},
+    {"name": "github-dark",     "mode": "dark"}
   ]
 }
 ```
@@ -119,6 +120,7 @@ release-information themes
 | gruvbox-dark      | dark  | Retro-groove          | Warm earth tones (Pavel Pertsev's gruvbox).                     |
 | catppuccin-mocha  | dark  | Community pastel      | Soothing pastel dark theme (Mocha flavour).                     |
 | monokai-classic   | dark  | Designer classic      | Vivid magenta, lime, and cyan on warm coal.                     |
+| github-dark       | dark  | Primer-inspired       | GitHub's default dark mode palette (Primer dark).               |
 
 ### Markdown coverage matrix
 
@@ -153,7 +155,7 @@ Anthropic blog](https://www.anthropic.com/) for external-link styling.
 
 ## Closing notes
 
-The same Markdown source above is rendered ten times — once per theme — to
+The same Markdown source above is rendered eleven times — once per theme — to
 produce the per-theme HTML files in this directory. Differences between
 those files are *only* the inline `<style>` block (the base CSS and the
 Pygments stylesheet); the body HTML is byte-identical. That property is
