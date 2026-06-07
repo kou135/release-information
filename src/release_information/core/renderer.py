@@ -105,7 +105,7 @@ def render_markdown(
     theme_name:
         Registry key of the theme to render with. ``None`` falls back to
         :data:`release_information.core.theme.DEFAULT_THEME_NAME` so existing
-        callers that omit this kwarg keep the v0.1.1 Midnight Museum look.
+        callers that omit this kwarg use the default theme (tokyo-night).
     locale:
         Optional locale code (``"en"``, ``"ja"``, ``"ko"``, ``"hi"``). When
         ``None`` the effective locale is resolved via
