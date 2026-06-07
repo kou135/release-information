@@ -96,7 +96,7 @@ ls docs/release-information/
 
 ## Theme gallery
 
-`release-information` ships **10 themes** out of the box. Pick one with the
+`release-information` ships **11 themes** out of the box. Pick one with the
 `--theme` flag on `render` / `render-all`, or list them all with the
 `themes` sub-command:
 
@@ -121,6 +121,7 @@ is rendered once per theme so you can compare them side by side.
 | catppuccin-mocha  | dark  | Soothing pastel dark theme (Mocha flavour) from Catppuccin.       |
 | monokai-classic   | dark  | Vivid magenta, lime, and cyan on warm coal.                       |
 | github-light      | light | Clean light theme inspired by github.com / Primer.                |
+| github-dark       | dark  | GitHub's default dark mode palette (Primer dark, calm blue accents). |
 | solarized-light   | light | Ethan Schoonover's warm light palette with selective contrast.    |
 
 ## Usage
