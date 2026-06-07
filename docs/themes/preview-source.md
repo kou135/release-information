@@ -29,8 +29,8 @@ dark, two light, and a handful of designer-classic ports. Pick one with the
 * Pair-programming and screen-sharing environments often benefit from
   warmer palettes (`gruvbox-dark`, `monokai-classic`) that are easier on
   the eye for long sessions.
-* Brand-aligned themes (`midnight-museum`, `tokyo-night`) make a spec feel
-  like part of a product rather than a generic doc.
+* Brand-aligned themes (`tokyo-night` — the current default — and `midnight-museum`)
+  make a spec feel like part of a product rather than a generic doc.
 
 ### What's NOT in scope
 
