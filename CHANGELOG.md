@@ -15,6 +15,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- New `github-dark` theme (11th theme) — GitHub.com's default dark palette
+  (Primer dark). Use via `--theme github-dark`. Palette sourced from
+  Primer Primitives (`primer/primitives`) and confirmed against
+  projekt0n/github-nvim-theme's `github_dark` port (Primer dark default).
+  Includes `docs/themes/github-dark.html` preview rendered from the shared
+  gallery source. Pygments style: `github-dark` (confirmed Pygments builtin).
 - `release-information delete --file <NAME>` sub-command: removes
   `<repo_root>/docs/release-information/<NAME>.md` and the matching
   `.html` in one call. Path traversal (`..`, `/`, absolute paths) and

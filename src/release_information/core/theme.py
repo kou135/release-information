@@ -33,6 +33,7 @@ from dataclasses import dataclass
 
 from .themes import catppuccin_mocha as _catppuccin_mocha
 from .themes import dracula as _dracula
+from .themes import github_dark as _github_dark
 from .themes import github_light as _github_light
 from .themes import gruvbox_dark as _gruvbox_dark
 from .themes import midnight_museum as _midnight_museum
@@ -136,6 +137,15 @@ THEMES: dict[str, Theme] = {
         pygments_style=_github_light.PYGMENTS_STYLE,
         is_dark=_github_light.IS_DARK,
         source_url=_github_light.SOURCE_URL,
+    ),
+    "github-dark": Theme(
+        name="github-dark",
+        display_name=_github_dark.DISPLAY_NAME,
+        description=_github_dark.DESCRIPTION,
+        base_css=_github_dark.BASE_CSS,
+        pygments_style=_github_dark.PYGMENTS_STYLE,
+        is_dark=_github_dark.IS_DARK,
+        source_url=_github_dark.SOURCE_URL,
     ),
     "solarized-light": Theme(
         name="solarized-light",
