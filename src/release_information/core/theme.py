@@ -15,9 +15,9 @@ Why this split:
 
 Backward compatibility:
 
-* ``render_markdown(md)`` without ``theme_name`` returns the Midnight Museum
+* ``render_markdown(md)`` without ``theme_name`` returns the Tokyo Night
   theme (``DEFAULT_THEME_NAME``), producing structurally identical output to
-  v0.1.1.
+  previous releases.
 * ``BRAND_TITLE`` / ``BRAND_SUBTITLE`` remain importable at module level for
   existing call sites.
 * ``build_html(...)`` keeps its positional signature; the new ``theme=``
@@ -175,7 +175,7 @@ THEMES: dict[str, Theme] = {
     ),
 }
 
-DEFAULT_THEME_NAME: str = "midnight-museum"
+DEFAULT_THEME_NAME: str = "tokyo-night"
 
 # Backward-compatible module-level brand constants. Existing code that does
 # ``from release_information.core.theme import BRAND_TITLE`` keeps working.

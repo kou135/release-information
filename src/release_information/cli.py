@@ -22,7 +22,7 @@ Sub-commands
     Print a human-readable table of every registered theme (name, display
     name, light/dark mode, description). Use the ``--theme NAME`` flag of
     ``render`` / ``render-all`` to render with a specific theme; omit it to
-    use the default ``midnight-museum`` (preserves v0.1.1 output).
+    omit it to use the default ``tokyo-night``.
 
 ``install`` / ``uninstall``
     Manage the ``.git/hooks/pre-commit`` hook of a target repository. See
@@ -50,6 +50,7 @@ from pathlib import Path
 from . import __version__
 from .core.i18n import SUPPORTED_LOCALES
 from .core.renderer import render_markdown
+from .core.theme import DEFAULT_THEME_NAME
 
 # Glob used by ``render-all`` (relative to ``--root``).
 _RENDER_ALL_GLOB = "docs/release-information/**/*.md"
@@ -90,7 +91,7 @@ def _render_file(
     """Render ``md_path`` to ``md_path.with_suffix('.html')`` and return the path.
 
     Both ``theme_name`` and ``locale`` are forwarded to :func:`render_markdown`.
-    ``theme_name=None`` keeps the v0.1.1 Midnight Museum default;
+    ``theme_name=None`` uses the default theme (tokyo-night);
     ``locale=None`` defers to the i18n resolver (env-var driven, default
     ``"en"``).
     """
@@ -263,7 +264,7 @@ def _build_parser() -> argparse.ArgumentParser:
     p_render.add_argument(
         "--theme",
         default=None,
-        help="theme name (default: midnight-museum). use `themes` sub-command to list.",
+        help=f"theme name (default: {DEFAULT_THEME_NAME}). use `themes` sub-command to list.",
     )
     p_render.add_argument(
         "--lang",
@@ -288,7 +289,7 @@ def _build_parser() -> argparse.ArgumentParser:
     p_render_all.add_argument(
         "--theme",
         default=None,
-        help="theme name (default: midnight-museum). use `themes` sub-command to list.",
+        help=f"theme name (default: {DEFAULT_THEME_NAME}). use `themes` sub-command to list.",
     )
     p_render_all.add_argument(
         "--lang",

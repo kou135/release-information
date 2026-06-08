@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Default theme changed from `midnight-museum` to `tokyo-night`. Output produced
+  by `render` / `render-all` without an explicit `--theme` now uses Tokyo Night.
+  All themes (including `midnight-museum`) remain available via `--theme`.
+
 ### Added
 
 - `release-information delete --file <NAME>` sub-command: removes

@@ -8,9 +8,9 @@
 
 रिलीज़ नोट्स और डिज़ाइन विनिर्देशों के लिए, git pre-commit द्वारा संचालित Markdown से एकल HTML
 फ़ाइल बनाने वाला रेंडरर। `docs/release-information/` के अंदर एक Markdown फ़ाइल रखें और commit
-करें — Anthropic शैली की **Midnight Museum** डार्क थीम, इनलाइन CSS, स्वचालित विषय-सूची, और
+करें — **Tokyo Night** डार्क थीम (डिफ़ॉल्ट), इनलाइन CSS, स्वचालित विषय-सूची, और
 शून्य बाहरी निर्भरताओं वाला एक स्वयं-निहित HTML दस्तावेज़ पुनः जनरेट होकर उसी commit में
-स्टेज हो जाता है।
+स्टेज हो जाता है। Midnight Museum सहित सभी थीम `--theme` से उपलब्ध रहते हैं।
 
 ## यह OSS क्यों (और सीधे `python-markdown` / MkDocs / Quarto / Pandoc क्यों नहीं)?
 

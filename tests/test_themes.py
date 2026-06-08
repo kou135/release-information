@@ -35,6 +35,26 @@ def test_default_theme_is_registered() -> None:
     assert THEMES[DEFAULT_THEME_NAME].name == DEFAULT_THEME_NAME
 
 
+def test_default_theme_is_tokyo_night() -> None:
+    """Regression guard: DEFAULT_THEME_NAME must be tokyo-night after the 2026-06-08 switch."""
+    assert DEFAULT_THEME_NAME == "tokyo-night", (
+        f"DEFAULT_THEME_NAME changed unexpectedly: got {DEFAULT_THEME_NAME!r}, "
+        "expected 'tokyo-night'. If this is intentional, update this assertion."
+    )
+
+
+def test_default_theme_renders_tokyo_night_hex() -> None:
+    """Regression: render_markdown() without theme_name produces Tokyo Night CSS hex colors."""
+    from release_information.core.renderer import render_markdown
+
+    html = render_markdown("# Hello\n\nTest.\n")
+    # Tokyo Night background (#1A1B26) and link (#7DCFFF) are distinctive palette markers
+    assert "#1A1B26" in html or "#7DCFFF" in html, (
+        "Default render output does not contain expected Tokyo Night hex colors "
+        "(#1A1B26 or #7DCFFF). The default theme may not be tokyo-night."
+    )
+
+
 @pytest.mark.parametrize("name,theme", sorted(THEMES.items()))
 def test_theme_name_matches_registry_key(name: str, theme: Theme) -> None:
     assert theme.name == name

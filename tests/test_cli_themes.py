@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 
-from release_information.core.theme import THEMES
+from release_information.core.theme import DEFAULT_THEME_NAME, THEMES
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 FIXTURE_BASIC = REPO_ROOT / "tests" / "fixtures" / "sample-basic.md"
@@ -44,8 +44,8 @@ def test_cli_themes_subcommand_lists_all_registered_themes(tmp_path: Path) -> No
 
 def test_cli_render_accepts_theme_flag(tmp_path: Path) -> None:
     # use the first non-default theme if available, else fall back to default
-    non_default = sorted(n for n in THEMES if n != "midnight-museum")
-    theme_name = non_default[0] if non_default else "midnight-museum"
+    non_default = sorted(n for n in THEMES if n != DEFAULT_THEME_NAME)
+    theme_name = non_default[0] if non_default else DEFAULT_THEME_NAME
 
     src = tmp_path / "input.md"
     src.write_text(FIXTURE_BASIC.read_text(encoding="utf-8"), encoding="utf-8")
@@ -76,8 +76,8 @@ def test_cli_render_all_accepts_theme_flag(tmp_path: Path) -> None:
     (docs / "a.md").write_text("# Doc A\n\nfirst.\n", encoding="utf-8")
     (docs / "b.md").write_text("# Doc B\n\nsecond.\n", encoding="utf-8")
 
-    non_default = sorted(n for n in THEMES if n != "midnight-museum")
-    theme_name = non_default[0] if non_default else "midnight-museum"
+    non_default = sorted(n for n in THEMES if n != DEFAULT_THEME_NAME)
+    theme_name = non_default[0] if non_default else DEFAULT_THEME_NAME
 
     result = _run("render-all", "--theme", theme_name, cwd=tmp_path)
     assert result.returncode == 0, result.stderr

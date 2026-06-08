@@ -8,8 +8,9 @@
 
 A git pre-commit driven Markdown to single-file HTML renderer for release notes and design
 specs. Drop a Markdown file under `docs/release-information/`, commit, and a self-contained
-HTML document (Anthropic-flavoured **Midnight Museum** dark theme, inline CSS, auto table of
+HTML document (**Tokyo Night** dark theme by default, inline CSS, auto table of
 contents, zero external dependencies) is regenerated and staged alongside it.
+The classic Midnight Museum theme and 9 other themes remain available via `--theme`.
 
 ## Why this OSS (and not `python-markdown` directly / MkDocs / Quarto / Pandoc)?
 
@@ -114,7 +115,7 @@ is rendered once per theme so you can compare them side by side.
 |-------------------|-------|-------------------------------------------------------------------|
 | midnight-museum   | dark  | Anthropic-flavoured dark theme with serif headings, warm gold.    |
 | nord              | dark  | Arctic, north-bluish palette designed for clarity.                |
-| tokyo-night       | dark  | Clean dark theme with vivid neon accents.                         |
+| tokyo-night       | dark  | Clean dark theme with vivid neon accents. **(default)**           |
 | dracula           | dark  | Purple, pink, and cyan accents on a deep slate background.        |
 | one-dark          | dark  | Atom-flavoured warm reds, greens, and blues on muted slate.       |
 | gruvbox-dark      | dark  | Retro-groove warm earth tones (Pavel Pertsev's gruvbox).          |
@@ -145,7 +146,7 @@ release-information render docs/release-information/v1.0.0.md
 
 release-information render docs/release-information/v1.0.0.md --theme nord
 # same, but rendered with the `nord` theme instead of the default
-# (`midnight-museum`). See `release-information themes` for the full list.
+# (`tokyo-night`). See `release-information themes` for the full list.
 ```
 
 ### `render-all` — bulk re-render
